@@ -21,11 +21,11 @@ def index(request):
     return render(request, "account/index.html", context)
 
 
-def register(request):
+def signup(request):
     form = UserCreationForm(request.POST)
     context = {"form": form}
     if request.method == "GET" or not form.is_valid():
-        return render(request, "account/register.html", context)
+        return render(request, "account/signup.html", context)
     form.save()
     return redirect("account:login")
     
