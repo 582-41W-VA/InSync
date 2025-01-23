@@ -43,3 +43,6 @@ def login(request):
 def logout(request):
     django_logout(request)
     return redirect("account:login")
+
+def home(request):
+    return render(request, "account/home.html")
