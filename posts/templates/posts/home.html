@@ -1,6 +1,57 @@
 {% extends 'base.html' %} 
 {% block 'title' %} Home {% endblock %} 
 {% block 'main' %}
-<h1>Home</h1>
+<nav>
+    <div class="navbar">
+        <div class="logo">inSync</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+        </div>
+        <div class="nav-links">
+            <a href="#">home</a>
+            <a href="#">login in/sign up</a>
+        </div>
+    </div>
+</nav>
 
+<div class="posts">
+    <div class="post">
+        <div class="post-header">
+            <div class="user-icon"></div>
+            <div class="post-content">
+                <p>Post content goes here...</p>
+            </div>
+            <div class="post-actions">
+                <button>Comment</button>
+                <button>Share</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="post">
+        <div class="post-header">
+            <div class="user-icon"></div>
+            <div class="post-content">
+                <div class="media-placeholder">image/video</div>
+            </div>
+            <div class="post-actions">
+                <button>Comment</button>
+                <button>Share</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="post">
+        <div class="post-header">
+            <div class="user-icon"></div>
+            <div class="post-content">
+                <p>Another post content...</p>
+            </div>
+            <div class="post-actions">
+                <button>Comment</button>
+                <button>Share</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
