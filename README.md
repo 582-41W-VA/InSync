@@ -1,4 +1,4 @@
-## Team Members: **Mohame**,**Nupur** & **Sara**
+## Team Members: **Mohame**, **Nupur** & **Sara**
 
 ## Weekly Deliverables (Due Every Week)
 
@@ -88,13 +88,13 @@ You should see an output like this:
 Starting development server at http://127.0.0.1:8000/
 ```
 
-### 6. View the Project in Your Browser
+### 5. View the Project in Your Browser
 
 1. Open your web browser.
 2. Go to http://127.0.0.1:8000/.
 3. You should see the "Insync Platform" homepage with all the features accessible through the web interface.
 
-### 7. Access the Django Admin Panel:
+### 6. Access the Django Admin Panel:
 
 To access the admin panel, you’ll need to create a superuser account (which has full admin access).
 
