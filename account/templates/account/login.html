@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 {% block 'title' %} Sign up {% endblock %}
 {% block 'main' %}
-<h1>Login Up</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit">Submit</button>
-    </form>
-    <p>Sign up <a href="{% url 'account:login' %}">Login here</a>.</p>
-
+<section class="login">
+    <div class="container">
+        <h3 class="title">log in to stay connected and collaborate with your team</h3>
+        <div class="login-form">
+            <h2>login</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <button type="submit">login</button>
+            </form>
+        </div>
+        <p class="signup-link">New to inSync? Sign up<a href="{% url 'account:signup' %}"> here.</a></p>
+    </div>
+</section>
 {% endblock %}
