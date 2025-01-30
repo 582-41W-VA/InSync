@@ -25,6 +25,7 @@
                     <li><img src="" alt="Profile Image">Img</li>
                     {% endif %}
                     <li><a href="#">Profile</a></li>
+                    <li><a href="{% url 'account:logout' %}">Logout</a></li>
                 </ul>
                 {% else %}
                 <ul class="logs">
