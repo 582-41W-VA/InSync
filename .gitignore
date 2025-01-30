@@ -1,2 +1,7 @@
 # ignore db
 db.sqlite3
+
+# Ignore compiled Python files
+__pycache__/
+.vscode/
+.venv/
