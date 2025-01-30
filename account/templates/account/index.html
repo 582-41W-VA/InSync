@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block 'title' %}Account{% endblock %}
+{% block 'main' %}
+<h2>Change Password</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button>Submit</button>
+</form>
+{% endblock %}
