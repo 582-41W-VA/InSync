@@ -1,4 +1,4 @@
-/* body {
+ /*body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -288,4 +288,108 @@ header nav a:hover {
 
 footer {
   text-align: center;
+}
+
+
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  header .container {
+    /* flex-direction: column; */
+    height: auto;
+  }
+
+  header .menu-icon {
+    display: block;
+  }
+
+  header nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .login {
+    padding: 80px 0;
+  }
+  
+  .login .login-form {
+    /* width: 90%; */
+    padding: 40px 60px;
+  }
+
+  .profile img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 700px) {
+  .container {
+    /* width: 100%; */
+  }
+
+  header .container {
+    flex-direction: column;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .login {
+    padding: 60px 0;
+  }
+  
+  .login .login-form {
+    /* width: 90%; */
+    /* padding: 30px 50px; */
+  }
+
+  header nav ul {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .profile img {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 500px) {
+  .container {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  header .menu-icon {
+    display: block;
+  }
+
+  .login {
+    padding: 40px 0;
+  }
+  
+  .logo {
+    font-size: 18px;
+  }
+
+  .login .login-form {
+    width: 100%;
+    padding: 25px 40px;
+  }
+
+  header nav ul {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .profile img {
+    width: 30px;
+    height: 30px;
+  }
+
+  footer {
+    font-size: 12px;
+  }
 }
