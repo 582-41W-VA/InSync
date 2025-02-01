@@ -14,8 +14,6 @@ function headerToggle() {
     document.body.classList.toggle("header-open");
 }
 
-
-  
 function headerClose() {
     let header = document.querySelector("header");
     if (window.innerWidth > 700) {

@@ -269,6 +269,7 @@ footer {
   }
 
   header.responsive nav {
+    background-color: var(--secondary-color-yellow);
     display: block;
     width: 100%;
     position: absolute;
@@ -277,15 +278,12 @@ footer {
     transform: translate(-50%);
   }
 
-  header.responsive nav .logs {
-    border-radius: 0;
-  }
-
   header.responsive nav ul {
     height: 100vh;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 0;
     gap: 40px;
   }
 
