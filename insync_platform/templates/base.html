@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block 'title' %}{% endblock %}</title>
     {% load static %}
+    <script type="module" src="{% static 'js/app.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 
@@ -29,7 +30,7 @@
                 </ul>
                 {% else %}
                 <ul class="logs">
-                    <li><a href="{% url 'account:signup' %}">Signup</a></li>
+                    <li><a href="{% url 'account:signup' %}">Signup</a></li>/
                     <li><a href="{% url 'account:login' %}">Login</a></li>
                 </ul>
                 {% endif %}
