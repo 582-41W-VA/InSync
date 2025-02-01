@@ -5,14 +5,17 @@ window.onload = function() {
     if (emailField) emailField.placeholder = "Enter your password";
 };
 
+const menu = document.querySelector('.menu-icon')
+menu.addEventListener('click', headerToggle)
+
 function headerToggle() {
-    const menu = document.querySelector('.menu-icon')
-    menu.addEventListener('click', headerToggle)
     let header = document.querySelector("header");
     header.classList.toggle("responsive");
     document.body.classList.toggle("header-open");
 }
 
+
+  
 function headerClose() {
     let header = document.querySelector("header");
     if (window.innerWidth > 700) {
