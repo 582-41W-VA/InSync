@@ -197,6 +197,7 @@ header .logs{
   margin-right: auto;
   text-transform: uppercase;
   margin-top: 20px;
+  border: transparent 1px solid;
 }
 
 .login form button:hover {
