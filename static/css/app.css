@@ -47,9 +47,19 @@ a:hover {
   height: 50px;
 }
 
+button{
+  width: fit-content;
+  padding: 10px 24px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
 /* nav */
 header {
   position: relative;
+  border-bottom: var(--accent-color-light-blue) 1px solid;
   z-index: 100;
 }
 
@@ -57,7 +67,7 @@ header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100px;
+  height: 80px;
 }
 
 header .menu-icon {
@@ -94,11 +104,13 @@ header nav ul {
 }
 
 header nav li {
-  padding: 10px 15px;
+  padding: 4px 4px;
 }
 
-header nav a:hover {
-  opacity: 0.7;
+header .logs{
+  background-color: var(--secondary-color-yellow);
+  padding: 4px 16px;
+  border-radius: 24px;
 }
 
 /* login */
@@ -116,7 +128,7 @@ header nav a:hover {
 }
 
 .login {
-  padding: 100px 0;
+  padding: 88px 0;
 }
 
 .login .title {
@@ -141,6 +153,7 @@ header nav a:hover {
   text-align: center;
   text-transform: capitalize;
   margin-bottom: 30px;
+  font-weight: 600;
 }
 
 .login form {
@@ -159,6 +172,13 @@ header nav a:hover {
   border: none;
   border-bottom: 1px solid var(--black);
   font-size: 16px;
+  padding-bottom: 4px;
+  width: 100%;
+}
+
+.login form input:hover {
+  outline: none;
+  border-bottom: 2px solid var(--black);
 }
 
 .login form input:focus {
@@ -166,24 +186,23 @@ header nav a:hover {
   border-bottom: 2px solid var(--black);
 }
 
+.login form input::placeholder {
+  color: var(--primary-color-blue);
+}
+
 .login form button {
-  width: fit-content;
-  padding: 10px 24px;
-  border-radius: 24px;
   background-color: var(--primary-color-blue);
   color: #fff;
-  border: none;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
   text-transform: uppercase;
-  cursor: pointer;
-  transition: 0.4s;
+  margin-top: 20px;
 }
 
 .login form button:hover {
   background-color: var(--accent-color-light-blue);
   color: var(--black);
+  border: var(--black) 1px solid;
 }
 
 .login .signup-link {
@@ -191,8 +210,24 @@ header nav a:hover {
   margin-top: 24px;
 }
 
+.login .signup-link a {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.login .signup-link a:hover {
+  text-decoration: none;
+}
+
 footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 0;
   text-align: center;
+  z-index: 10;
+  border-top: var(--accent-color-light-blue) 1px solid;
 }
 
 /* Responsive Styles */
