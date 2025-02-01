@@ -7,7 +7,8 @@ class Tag(models.Model):
     created_at = models.DateTimeField(default=timezone.now) 
 
     def __str__(self):
-        return f"{self.name}"
+        return f"Tag {self.name}"
+
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -29,3 +30,80 @@ class Post(models.Model):
     
     def __str__(self):
         return self.title
+    
+    
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)  
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies') 
+    user = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Comment by {self.user} in Post: {self.post.title}"
+
+    def upvote_count(self):
+        return self.comment_upvotes.count()
+    
+    
+class Media(models.Model):
+    post = models.ForeignKey(Post, null=True, blank=True, related_name="media_post", on_delete=models.CASCADE) 
+    media = models.FileField(upload_to='', null=True, blank=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Media Post: {self.post}, ID: {self.post.id}, user: {self.post.user}"
+    
+    def is_video(self):
+        if self.media:
+            return self.media.name.lower().endswith(
+                ('.mp4', '.mov', '.webm')
+            )
+        return False
+
+
+class Upvote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name="post_upvotes", null=True, blank=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, related_name="comment_upvotes", null=True, blank=True, on_delete=models.CASCADE)
+    upvoted_at = models.DateTimeField(default=timezone.now)
+
+    unique_together = (
+        ('user', 'post'),
+        ('user', 'comment'),
+    ) 
+
+    def __str__(self):
+        return f"Upvote by {self.user} for {'Post' if self.post else 'Comment'} ID {self.post.id if self.post else self.comment.id}"
+
+
+class Save(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, null=True, blank=True, on_delete=models.CASCADE)
+    saved_at = models.DateTimeField(default=timezone.now)
+
+    unique_together = (
+        ('user', 'post'),
+        ('user', 'comment'),
+    ) 
+
+    def __str__(self):
+        return f"Saved by {self.user} for {'Post' if self.post else 'Comment'} ID {self.post.id if self.post else self.comment.id}"
+
+
+class Flag(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, null=True, blank=True, on_delete=models.CASCADE)
+    reason = models.TextField()
+    flagged_at = models.DateTimeField(default=timezone.now)
+
+    unique_together = (
+        ('user', 'post'),
+        ('user', 'comment'),
+    ) 
+
+    def __str__(self):
+        return f"Flagged by {self.user} for {'Post' if self.post else 'Comment'} ID {self.post.id if self.post else self.comment.id}"
