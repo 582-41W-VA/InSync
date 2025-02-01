@@ -56,6 +56,15 @@ button{
   transition: 0.4s;
 }
 
+.header-open{
+  overflow: hidden;
+}
+
+.img {
+  background-size: cover;
+  background-position: center;
+}
+
 /* nav */
 header {
   position: relative;
@@ -71,17 +80,13 @@ header .container {
 }
 
 header .menu-icon {
-  background-image: url(./imgs/icons8-hamburger-150.png);
+  background-image: url(/static/images/icons8-menu-50.png);
   background-position: center;
   background-size: cover;
   height: 30px;
   width: 30px;
   cursor: pointer;
   display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 header .search-form {
@@ -128,7 +133,7 @@ header .logs{
 }
 
 .login {
-  padding: 88px 0;
+  padding: 100px 0;
 }
 
 .login .title {
@@ -233,19 +238,6 @@ footer {
 
 /* Responsive Styles */
 @media (max-width: 900px) {
-  header .container {
-    height: auto;
-  }
-
-  header .menu-icon {
-    display: block;
-  }
-
-  header nav {
-    flex-direction: column;
-    gap: 10px;
-  }
-
   .login {
     padding: 80px 0;
   }
@@ -258,21 +250,61 @@ footer {
     width: 40px;
     height: 40px;
   }
+
+  header .menu-icon {
+    display: block;
+    transition: 0.5s;
+  }
+
+  header nav{
+    display: none;
+  }
+
+  header span{
+    display: none;
+  }
+
+  header.responsive {
+    background-color: var(--secondary-color-yellow);
+  }
+
+  header.responsive nav {
+    display: block;
+    width: 100%;
+    position: absolute;
+    top: 101%;
+    left: 50%;
+    transform: translate(-50%);
+  }
+
+  header.responsive nav .logs {
+    border-radius: 0;
+  }
+
+  header.responsive nav ul {
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+  }
+
+  header.responsive nav ul li {
+    transform: translateY(-90px);
+  }
+
+  header.responsive .logo h2 {
+    color: var(--black);
+  }
+
+  header.responsive .menu-icon {
+    background-image: url(/static/images/icons8-x-50.png);
+  }
 }
 
 @media (max-width: 700px) {
-
-  header .container {
-    flex-direction: column;
-  }
-
   .logo {
     font-size: 20px;
-  }
-
-  header nav ul {
-    flex-direction: column;
-    gap: 12px;
   }
 
   .profile img {
@@ -282,10 +314,6 @@ footer {
 }
 
 @media (max-width: 500px) {
-
-  header .menu-icon {
-    display: block;
-  }
 
   .login {
     padding: 40px 0;
@@ -297,11 +325,6 @@ footer {
 
   .login .login-form {
     padding: 25px 40px;
-  }
-
-  header nav ul {
-    flex-direction: column;
-    gap: 8px;
   }
 
   .profile img {
