@@ -47,9 +47,28 @@ a:hover {
   height: 50px;
 }
 
+button{
+  width: fit-content;
+  padding: 10px 24px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.header-open{
+  overflow: hidden;
+}
+
+.img {
+  background-size: cover;
+  background-position: center;
+}
+
 /* nav */
 header {
   position: relative;
+  border-bottom: var(--accent-color-light-blue) 1px solid;
   z-index: 100;
 }
 
@@ -57,21 +76,17 @@ header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100px;
+  height: 80px;
 }
 
 header .menu-icon {
-  background-image: url(./imgs/icons8-hamburger-150.png);
+  background-image: url(/static/images/icons8-menu-50.png);
   background-position: center;
   background-size: cover;
   height: 30px;
   width: 30px;
   cursor: pointer;
   display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 header .search-form {
@@ -94,11 +109,13 @@ header nav ul {
 }
 
 header nav li {
-  padding: 10px 15px;
+  padding: 4px 4px;
 }
 
-header nav a:hover {
-  opacity: 0.7;
+header .logs{
+  background-color: var(--secondary-color-yellow);
+  padding: 4px 16px;
+  border-radius: 24px;
 }
 
 /* login */
@@ -141,6 +158,7 @@ header nav a:hover {
   text-align: center;
   text-transform: capitalize;
   margin-bottom: 30px;
+  font-weight: 600;
 }
 
 .login form {
@@ -159,6 +177,13 @@ header nav a:hover {
   border: none;
   border-bottom: 1px solid var(--black);
   font-size: 16px;
+  padding-bottom: 4px;
+  width: 100%;
+}
+
+.login form input:hover {
+  outline: none;
+  border-bottom: 2px solid var(--black);
 }
 
 .login form input:focus {
@@ -166,24 +191,24 @@ header nav a:hover {
   border-bottom: 2px solid var(--black);
 }
 
+.login form input::placeholder {
+  color: var(--primary-color-blue);
+}
+
 .login form button {
-  width: fit-content;
-  padding: 10px 24px;
-  border-radius: 24px;
   background-color: var(--primary-color-blue);
   color: #fff;
-  border: none;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
   text-transform: uppercase;
-  cursor: pointer;
-  transition: 0.4s;
+  margin-top: 20px;
+  border: transparent 1px solid;
 }
 
 .login form button:hover {
   background-color: var(--accent-color-light-blue);
   color: var(--black);
+  border: var(--black) 1px solid;
 }
 
 .login .signup-link {
@@ -191,25 +216,28 @@ header nav a:hover {
   margin-top: 24px;
 }
 
+.login .signup-link a {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.login .signup-link a:hover {
+  text-decoration: none;
+}
+
 footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 0;
   text-align: center;
+  z-index: 10;
+  border-top: var(--accent-color-light-blue) 1px solid;
 }
 
 /* Responsive Styles */
 @media (max-width: 900px) {
-  header .container {
-    height: auto;
-  }
-
-  header .menu-icon {
-    display: block;
-  }
-
-  header nav {
-    flex-direction: column;
-    gap: 10px;
-  }
-
   .login {
     padding: 80px 0;
   }
@@ -222,21 +250,59 @@ footer {
     width: 40px;
     height: 40px;
   }
+
+  header .menu-icon {
+    display: block;
+    transition: 0.5s;
+  }
+
+  header nav{
+    display: none;
+  }
+
+  header span{
+    display: none;
+  }
+
+  header.responsive {
+    background-color: var(--secondary-color-yellow);
+  }
+
+  header.responsive nav {
+    background-color: var(--secondary-color-yellow);
+    display: block;
+    width: 100%;
+    position: absolute;
+    top: 101%;
+    left: 50%;
+    transform: translate(-50%);
+  }
+
+  header.responsive nav ul {
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
+    gap: 40px;
+  }
+
+  header.responsive nav ul li {
+    transform: translateY(-90px);
+  }
+
+  header.responsive .logo h2 {
+    color: var(--black);
+  }
+
+  header.responsive .menu-icon {
+    background-image: url(/static/images/icons8-x-50.png);
+  }
 }
 
 @media (max-width: 700px) {
-
-  header .container {
-    flex-direction: column;
-  }
-
   .logo {
     font-size: 20px;
-  }
-
-  header nav ul {
-    flex-direction: column;
-    gap: 12px;
   }
 
   .profile img {
@@ -246,10 +312,6 @@ footer {
 }
 
 @media (max-width: 500px) {
-
-  header .menu-icon {
-    display: block;
-  }
 
   .login {
     padding: 40px 0;
@@ -261,11 +323,6 @@ footer {
 
   .login .login-form {
     padding: 25px 40px;
-  }
-
-  header nav ul {
-    flex-direction: column;
-    gap: 8px;
   }
 
   .profile img {
