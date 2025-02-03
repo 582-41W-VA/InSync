@@ -108,6 +108,10 @@ header nav ul {
   color: var(--black);
 }
 
+.home-icon {
+  margin-right: 40px; 
+}
+
 header nav li {
   padding: 4px 4px;
 }
@@ -236,6 +240,7 @@ footer {
   border-top: var(--accent-color-light-blue) 1px solid;
 }
 
+
 /* Responsive Styles */
 @media (max-width: 900px) {
   .login {
@@ -297,6 +302,10 @@ footer {
 
   header.responsive .menu-icon {
     background-image: url(/static/images/icons8-x-50.png);
+  }
+
+  .home-icon {
+    margin-right: 0; 
   }
 }
 
