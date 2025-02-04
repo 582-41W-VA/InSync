@@ -142,7 +142,7 @@ header .logs{
 }
 
 .login, .signup {
-  padding: 100px 0;
+  padding: 72px 0;
 }
 
 .login .title, 
@@ -184,6 +184,11 @@ header .logs{
 .signup form div{
   display: flex;
   gap: 8px;
+}
+
+.login form div label,
+.signup form div label{
+  width: 50%;
 }
 
 .login form input,
