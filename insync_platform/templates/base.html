@@ -8,6 +8,7 @@
     {% load static %}
     <script type="module" src="{% static 'js/app.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -28,10 +29,12 @@
                 </nav>
                 {% if request.user.is_authenticated %}
                 <ul class="profile">
-                {% if user.profile.profile_image %}
-                    <li><img src="" alt="Profile Image">Img</li>
-                {% endif %}
-                    <li><a href="{% url 'account:profile_overview'%}">Profile</a></li>
+                    <li class="create-post">
+                        <a href="{% url 'posts:create_post' %}">Create Post
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </li>
+                    <li><a href="{% url 'account:profile_overview'%}">{% include "components/profile_img.html" %}</a></li>
                 </ul>
                 {% else %}   
                 <ul class="logs">
@@ -41,7 +44,6 @@
                 </ul>
                 {% endif %}
             </div>
-            
         </div>
     </header>
 
