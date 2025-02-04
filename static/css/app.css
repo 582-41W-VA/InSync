@@ -81,14 +81,15 @@ header .container {
   justify-content: space-between;
   align-items: center;
   height: 80px;
+  gap: 20px;
 }
 
 header .menu-icon {
   background-image: url(/static/images/icons8-menu-50.png);
   background-position: center;
   background-size: cover;
-  height: 30px;
-  width: 30px;
+  height: 20px;
+  width: 20px;
   cursor: pointer;
   display: none;
 }
@@ -125,6 +126,44 @@ header .logs{
   border-radius: 24px;
   display: flex;
   gap: 10px;
+}
+
+/* search bar */
+header .search-form{
+  position: relative;
+  width: 60%;
+}
+
+header .search-form input{
+  background-color: var(--very-light-blue);
+  padding: 12px 24px;
+  border: none;
+  color: var(--primary-color-blue);
+  padding-left: 40px;
+  border-radius: 24px;
+  width: 100%;
+  outline: 1px solid black;
+}
+
+header .search-form i{
+  position: absolute;
+  font-size: 16px;
+  top: 48%;
+  left: 23px;
+  transform: translate(-50%, -50%); 
+}
+
+header .search-form .sort{
+  background-color: var(--primary-color-blue);
+  padding: 8px;
+  border-radius: 24px;
+  border: none;
+  color: var(--white);
+  width: fit-content;
+  position: absolute;
+  top: 51%;
+  right: -59px;
+  transform: translate(-50%, -50%); 
 }
 
 /* login and signup */
