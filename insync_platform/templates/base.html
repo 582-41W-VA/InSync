@@ -13,13 +13,14 @@
 <body>
     <header>
         <div class="container">
+            <div class="menu-icon img"></div>
+           
             <a class="logo" href="{% url 'posts:home' %}">
                 <h2>inSync</h2>
             </a>
             {% if request.path != '/account/login/' and request.path != '/account/signup/' %}
             {% include "components/main_search.html" %}
             {% endif %}
-            <div class="menu-icon img"></div>
             <nav>
                 <ul class="nav-links">
 
