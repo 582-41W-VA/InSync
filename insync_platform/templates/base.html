@@ -13,37 +13,35 @@
 <body>
     <header>
         <div class="container">
-            <div class="menu-icon img"></div>
-           
             <a class="logo" href="{% url 'posts:home' %}">
                 <h2>inSync</h2>
             </a>
             {% if request.path != '/account/login/' and request.path != '/account/signup/' %}
             {% include "components/main_search.html" %}
             {% endif %}
-            <nav>
-                <ul class="nav-links">
-
-                    {% if request.user.is_authenticated %}
-                    <ul class="profile">
-                        {% if user.profile.profile_image %}
-                        <li><img src="" alt="Profile Image">Img</li>
-                        {% endif %}
-                        <li><a href="{% url 'account:profile_overview'%}">Profile</a></li>
-                    </ul>
-                    {% else %}
+            <div class="holder">
+                <div class="menu-icon img"></div>
+                <nav>
                     <ul class="home-icon"> 
-                        <li><a   href="{% url 'posts:home' %}">Home</a></li>
+                        <li><a href="{% url 'posts:home' %}">Home</a></li>
                     </ul>
-                    <ul class="logs">
-                        <li><a href="{% url 'account:signup' %}">Signup</a></li>
-                        <span>/</span>
-                        <li><a href="{% url 'account:login' %}">Login</a></li>
-                    </ul>
-                    {% endif %}
+                </nav>
+                {% if request.user.is_authenticated %}
+                <ul class="profile">
+                {% if user.profile.profile_image %}
+                    <li><img src="" alt="Profile Image">Img</li>
+                {% endif %}
+                    <li><a href="{% url 'account:profile_overview'%}">Profile</a></li>
                 </ul>
-
-            </nav>
+                {% else %}   
+                <ul class="logs">
+                    <li><a href="{% url 'account:signup' %}">Signup</a></li>
+                    <span>/</span>
+                    <li><a href="{% url 'account:login' %}">Login</a></li>
+                </ul>
+                {% endif %}
+            </div>
+            
         </div>
     </header>
 
