@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .helpers import build_search_query, user_interaction_state, post_sort, comment_sort
+from .helpers import user_interaction_state, post_sort, comment_sort, searchQuery
 from .models import Post, Comment, Save, Upvote, Flag
 from .forms import PostForm, MediaForm
 from django.contrib.auth.decorators import login_required
@@ -146,9 +146,19 @@ def search_result(request):
     query = request.GET.get('query')
     user_id = request.GET.get('user_id')
     sort_by = request.GET.get('sort', 'newest')
+    name = request.GET.get('name')
+    url = request.GET.get('url', 'all')
+    posts, comments = searchQuery(query, Post, Comment, url, sort_by, request, user_id)
 
-    params = build_search_query(query)
-    posts = Post.objects.filter(params)   
+    context = {
+        'posts': posts, 
+        'comments': comments, 
+        'query': query, 
+        'url': url, 
+        'user_id': user_id, 
+        'name': name, 
+        'sort_by': sort_by 
+    }   
 
     posts = post_sort(posts, sort_by)
     context = {'posts': posts, 'query': query, 'user_id': user_id, 'sort_by': sort_by }
