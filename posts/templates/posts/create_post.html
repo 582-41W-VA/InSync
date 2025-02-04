@@ -1,0 +1,21 @@
+{% extends 'base.html' %} 
+{% block 'title' %} create a post {% endblock %} 
+{% block 'main' %}
+<section class="create-post">
+    <div class="container">
+        <h2 class="title">create post</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <p>Title: {{ post_form.title }} </p>
+            <p>Tags: Select tag/Category {{ post_form.tags }}</p>
+            <p>Content:{{ post_form.content }}</p>
+            <p>Image/Video:{{ media_form.media }}</p>
+            <p>Link{{ post_form.url }}</p>
+            
+            <button type="submit">Post</button>
+        </form>
+        <a href="{% url 'posts:home' %}">Cancel</a>
+    </div>
+</section>
+{% endblock %}

@@ -2,7 +2,77 @@
 {% block 'title' %} Home {% endblock %} 
 {% block 'main' %}
 
+<section class="home">
+    <div class="container">
+        <div class="posts">
+        {% if posts %}
+        {% for post in posts %}
+        <div class="post-container flex">
+            <div class="left">
+                {% include "components/profile_img.html" %}
+            </div>
 
+            <div class="right">
+                <div class="post-head flex">
+                    <div class="flex">
+                        <p>User: {{ post.user.username }}</p>
+                        <p>{{ post.created_at|timesince }} ago</p>
+                    </div>
+                    <div class="flex">
+                        <p>Save</p>
+                        <p>Flag</p>
+                        <p>Like</p>
+                    </div>
+                </div>
+                {% if post.title %}
+                    <h2 class="post-title"><a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a></h2>
+                {% else %}
+                    <p>No Title</p>
+                {% endif %}
 
+                <div class="tags flex">
+                {% for tag in post.tags.all %}
+                    <p><a href="#">{{ tag.name }}</a>,</p>
+                {% endfor %}
+                </div>
+
+                <p>{{ post.content }}</p>
+
+                {% if post.url %}
+                <a href="{{ post.url }}">{{ post.url }}</a>
+                {% else %}
+                <p>No Link Here</p>
+                {% endif %}
+
+                {% for media in post.media_post.all %}
+                {% if media.media %}
+                <div class="media">
+                    {% if media.is_video %}
+                        <video controls style="max-width: 100px; height: 100px;">
+                            <source src="{{ media.media.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        {% else %}
+                            <img src="{{ media.media.url }}" alt="Post Image">
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endfor %}
+
+                <div>
+                    <a href="{% url 'posts:post_detail' post.id %}">
+                        <i class="fa-regular fa-comment"></i> 
+                        {{ post.top_level_comments_count }}
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+    {% else %}
+    <p>No posts here</p>
+    {% endif %}
+</section>
 
 {% endblock %}
