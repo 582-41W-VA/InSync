@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .helpers import build_search_query, user_interaction_state, main_sort_queries
+from .helpers import build_search_query, user_interaction_state, post_sort, comment_sort
 from .models import Post, Comment, Save, Upvote, Flag
 from .forms import PostForm, MediaForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
 
 def home(request):
     posts = Post.objects.all()
@@ -36,8 +38,9 @@ def create_post(request):
     return render(request, 'posts/create_post.html', context)
 
 
-@login_required
 def toggle_upvote(request, object, object_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'redirect': '/account/login/'}, status=401)
     if object == 'post':
         post = get_object_or_404(Post, id=object_id)
         upvote = Upvote.objects.filter(user=request.user, post=post).first()
@@ -48,16 +51,60 @@ def toggle_upvote(request, object, object_id):
         return HttpResponse(status=400)
     if upvote:
         upvote.delete()
-    else:
         if object == 'post':
-            Upvote.objects.create(user=request.user, post=post)
+            upvotes = post.upvote_count() 
         elif object == 'comment':
-            Upvote.objects.create(user=request.user, comment=comment)
-    return redirect(request.META.get('HTTP_REFERER', 'home'))
+            upvotes = comment.upvote_count() 
+        return JsonResponse({
+            'is_added': False, 'message': 'Upvote Removed',
+            'action': 'upvote', 'upvotes': upvotes 
+        })
+    
+    if object == 'post':
+        Upvote.objects.create(user=request.user, post=post) 
+        upvotes = post.upvote_count()  
+    elif object == 'comment':
+        Upvote.objects.create(user=request.user, comment=comment)  
+        upvotes = comment.upvote_count()  
+    return JsonResponse({
+        'is_added': True, 'message': 'Upvoted',
+        'action': 'upvote', 'upvotes': upvotes 
+    })
 
 
-@login_required
+def flag(request, object, object_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'redirect': '/account/login/'}, status=401)
+    if object == 'post':
+        post = get_object_or_404(Post, id=object_id)
+        flag = Flag.objects.filter(user=request.user, post=post).first()
+    elif object == 'comment':
+        comment = get_object_or_404(Comment, id=object_id)
+        flag = Flag.objects.filter(user=request.user, comment=comment).first()
+    else:
+        return JsonResponse(status=400)
+    
+    if request.method == 'POST':
+        reason = request.POST.get('reason')
+        if not reason:
+            return JsonResponse({'message': 'Please select a reason.'}, status=400)
+        if flag:
+            flag.reason = reason
+            flag.save()
+            return JsonResponse({'message': 'Flag updated successfully', 'action': 'flag'})
+        else:
+            if object == 'post':
+                flag = Flag.objects.create(user=request.user, post=post, reason=reason)
+            elif object == 'comment':
+                flag = Flag.objects.create(user=request.user, comment=comment, reason=reason)
+            return JsonResponse({'message': 'Flagged successfully', 'action': 'flag'})
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
 def toggle_save(request, object, object_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'redirect': '/account/login/'}, status=401)
     if object == 'post':
         post = get_object_or_404(Post, id=object_id)
         save = Save.objects.filter(user=request.user, post=post).first()
@@ -68,12 +115,30 @@ def toggle_save(request, object, object_id):
         return HttpResponse(status=400)
     if save:
         save.delete() 
+        return JsonResponse({ 'is_added': False, 'message': 'Unsaved', 'action': 'save' })
     else:
         if object == 'post':
             Save.objects.create(user=request.user, post=post)
         elif object == 'comment':
             Save.objects.create(user=request.user, comment=comment)  
-    return redirect(request.META.get('HTTP_REFERER', 'home')) 
+    return JsonResponse({ 'is_added': True, 'message': 'Saved', 'action': 'save' })
+
+
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    sort_by = request.GET.get('sort', 'newest')
+    top_level_comments = post.comments.filter(parent__isnull=True)
+    sorted_comments = comment_sort(top_level_comments, sort_by)
+    interaction = user_interaction_state(request.user)
+
+    context = {
+        "post": post,
+        "comments": sorted_comments,
+        'interaction': interaction,
+        'sort_by': sort_by
+    }
+
+    return render(request, "posts/post_detail.html", context)
 
 
 @login_required
@@ -85,6 +150,6 @@ def search_result(request):
     params = build_search_query(query)
     posts = Post.objects.filter(params)   
 
-    posts = main_sort_queries(posts, sort_by)
+    posts = post_sort(posts, sort_by)
     context = {'posts': posts, 'query': query, 'user_id': user_id, 'sort_by': sort_by }
     return render(request, 'posts/search_result.html', context)
