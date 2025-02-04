@@ -3,10 +3,16 @@ window.onload = function() {
     const loginPass = document.querySelector('#id_password');
     const password = document.querySelector('#id_password1');
     const confirmPassword = document.querySelector('#id_password2');
+    const title = document.querySelector('#id_title');
+    const content = document.querySelector('#id_content');
+    const url = document.querySelector('#id_url')
     if (nameField) nameField.placeholder = "Enter your username";
     if (loginPass) loginPass.placeholder = "Enter your password";
     if (password) password.placeholder = "Enter your password";
     if (confirmPassword) confirmPassword.placeholder = " Confirm password";
+    if (title) title.placeholder = "Post Title";
+    if (content) content.placeholder = "Enter Content";
+    if (url) url.placeholder = "Enter a Link Here";
 };
 
 const menu = document.querySelector('.menu-icon')
