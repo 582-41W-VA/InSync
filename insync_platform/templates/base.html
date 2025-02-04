@@ -29,10 +29,12 @@
                 </nav>
                 {% if request.user.is_authenticated %}
                 <ul class="profile">
-                {% if user.profile.profile_image %}
-                    <li><img src="" alt="Profile Image">Img</li>
-                {% endif %}
-                    <li><a href="{% url 'account:profile_overview'%}">Profile</a></li>
+                    <li class="create-post">
+                        <a href="{% url 'posts:create_post' %}">Create Post
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </li>
+                    <li><a href="{% url 'account:profile_overview'%}">{% include "components/profile_img.html" %}</a></li>
                 </ul>
                 {% else %}   
                 <ul class="logs">
