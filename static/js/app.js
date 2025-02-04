@@ -1,8 +1,12 @@
 window.onload = function() {
     const nameField = document.querySelector('#id_username');
-    const emailField = document.querySelector('#id_password');
+    const loginPass = document.querySelector('#id_password');
+    const password = document.querySelector('#id_password1');
+    const confirmPassword = document.querySelector('#id_password2');
     if (nameField) nameField.placeholder = "Enter your username";
-    if (emailField) emailField.placeholder = "Enter your password";
+    if (loginPass) loginPass.placeholder = "Enter your password";
+    if (password) password.placeholder = "Enter your password";
+    if (confirmPassword) confirmPassword.placeholder = " Confirm password";
 };
 
 const menu = document.querySelector('.menu-icon')
