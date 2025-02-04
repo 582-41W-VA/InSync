@@ -1,8 +1,9 @@
 <form action="{% url 'posts:search_result' %}" method="GET" class="search-form">
+    <i class="fa-solid fa-magnifying-glass"></i>
     {% csrf_token %}
     <input type="text" name="query" placeholder="Search Posts" value="{{ request.GET.query }}">
 
-    <select name="sort" onchange="this.form.submit()">
+    <select name="sort" onchange="this.form.submit()" class="sort">
         <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
         <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest</option>
         <option value="upvotes" {% if sort_by == 'upvotes' %}selected{% endif %}>Most Upvoted</option>
