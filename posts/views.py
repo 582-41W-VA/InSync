@@ -124,6 +124,7 @@ def toggle_save(request, object, object_id):
     return JsonResponse({ 'is_added': True, 'message': 'Saved', 'action': 'save' })
 
 
+@login_required
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     sort_by = request.GET.get('sort', 'newest')
@@ -160,6 +161,4 @@ def search_result(request):
         'sort_by': sort_by 
     }   
 
-    posts = post_sort(posts, sort_by)
-    context = {'posts': posts, 'query': query, 'user_id': user_id, 'sort_by': sort_by }
     return render(request, 'posts/search_result.html', context)

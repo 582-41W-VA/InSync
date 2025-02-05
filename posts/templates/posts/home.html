@@ -25,9 +25,11 @@
                     </div>
                 </div>
                 {% if post.title %}
-                    <h2 class="post-title"><a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a></h2>
+                <h2 class="post-title">
+                    <a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
+                </h2>
                 {% else %}
-                    <p>No Title</p>
+                <p>No Title</p>
                 {% endif %}
 
                 <div class="tags flex">
@@ -36,7 +38,7 @@
                 {% endfor %}
                 </div>
 
-                <p>{{ post.content }}</p>
+                <p>{{ post.content|safe }}</p>
 
                 {% if post.url %}
                 <a href="{{ post.url }}">{{ post.url }}</a>
@@ -48,9 +50,8 @@
                 {% if media.media %}
                 <div class="media">
                     {% if media.is_video %}
-                        <video controls style="max-width: 100px; height: 100px;">
+                        <video controls>
                             <source src="{{ media.media.url }}" type="video/mp4">
-                            Your browser does not support the video tag.
                         </video>
                         {% else %}
                             <img src="{{ media.media.url }}" alt="Post Image">
@@ -65,7 +66,6 @@
                         {{ post.top_level_comments_count }}
                     </a>
                 </div>
-                
             </div>
         </div>
         <hr>

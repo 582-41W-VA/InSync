@@ -9,8 +9,17 @@
 
             <p>Title: {{ post_form.title }} </p>
             <p>Tags: Select tag/Category {{ post_form.tags }}</p>
-            <p>Content:{{ post_form.content }}</p>
-            <p>Image/Video:{{ media_form.media }}</p>
+            <p>Content:{{ post_form.media }}</p>
+            {{ post_form.content }}
+
+            <p>
+                Image/Video:
+                <label class="media-label" for="id_media">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Choose File
+                </label>
+            </p>
+
+            {{ media_form.media }}
             <p>Link{{ post_form.url }}</p>
             
             <button type="submit">Post</button>
