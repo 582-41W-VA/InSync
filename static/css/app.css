@@ -87,6 +87,7 @@ form button:hover {
 form input::placeholder, 
 form textarea::placeholder {
   color: var(--primary-color-blue);
+  font-family: "Kantumruy Pro", serif;
 }
 
 .header-open{
@@ -99,7 +100,7 @@ img {
 }
 
 .title{
-  max-width: 300px;
+  max-width: 350px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -328,7 +329,6 @@ header .search-form .sort{
 
 /* Home */
 .home .posts{
-  
   margin-bottom: 20px;
 }
 
@@ -421,6 +421,25 @@ header .search-form .sort{
   margin: 20px auto;
 }
 
+.create-post #id_media {
+  display: none;
+}
+
+.create-post .media-label {
+  display: inline-block;
+  padding: 20px;
+  background-color: var(--accent-color-light-blue);
+  color: var(--primary-color-blue);
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 24px;
+  transition: 0.4s;
+}
+
+.create-post .media-label:hover {
+  background-color: var(--very-light-blue);
+}
 
 footer {
   position: fixed;
