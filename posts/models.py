@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django_ckeditor_5.fields import CKEditor5Field
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -12,7 +13,7 @@ class Tag(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
-    content = models.TextField()
+    content = CKEditor5Field('Text', config_name='extends')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     tags = models.ManyToManyField(Tag, related_name='post_tag')
     url = models.URLField(blank=True, null=True)
