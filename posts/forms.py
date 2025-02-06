@@ -6,7 +6,10 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['title', 'content', 'url', 'tags'] 
         widgets = {
-            'tags': forms.CheckboxSelectMultiple,
+            'tags': forms.CheckboxSelectMultiple(attrs={'class': 'custom-checkbox'}),
+            'title': forms.TextInput(attrs={'placeholder': 'Enter the title of the post'}),
+            'content': forms.Textarea(attrs={'placeholder': 'Write your content here'}),
+            'url': forms.URLInput(attrs={'placeholder': 'Optional URL for the post'}),
         }
 
 
