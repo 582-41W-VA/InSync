@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .helpers import user_interaction_state, post_sort, comment_sort, searchQuery
+from .helpers import user_interaction_state, sort_queries
 from .models import Post, Comment, Save, Upvote, Flag
 from .forms import PostForm, MediaForm
 from django.contrib.auth.decorators import login_required
@@ -49,27 +49,38 @@ def toggle_upvote(request, object, object_id):
         upvote = Upvote.objects.filter(user=request.user, comment=comment).first()
     else:
         return HttpResponse(status=400)
+    
     if upvote:
         upvote.delete()
         if object == 'post':
             upvotes = post.upvote_count() 
         elif object == 'comment':
             upvotes = comment.upvote_count() 
-        return JsonResponse({
-            'is_added': False, 'message': 'Upvote Removed',
-            'action': 'upvote', 'upvotes': upvotes 
-        })
-    
-    if object == 'post':
-        Upvote.objects.create(user=request.user, post=post) 
-        upvotes = post.upvote_count()  
-    elif object == 'comment':
-        Upvote.objects.create(user=request.user, comment=comment)  
-        upvotes = comment.upvote_count()  
-    return JsonResponse({
-        'is_added': True, 'message': 'Upvoted',
-        'action': 'upvote', 'upvotes': upvotes 
-    })
+
+        return JsonResponse(
+            {
+                'is_added': False, 
+                'message': 'Upvote Removed',
+                'action': 'upvote', 
+                'upvotes': upvotes 
+            }
+        )
+    else:
+        if object == 'post':
+            Upvote.objects.create(user=request.user, post=post) 
+            upvotes = post.upvote_count()  
+        elif object == 'comment':
+            Upvote.objects.create(user=request.user, comment=comment)  
+            upvotes = comment.upvote_count() 
+
+    return JsonResponse(
+        {
+            'is_added': True, 
+            'message': 'Upvoted',
+            'action': 'upvote', 
+            'upvotes': upvotes 
+        }
+    )
 
 
 def flag(request, object, object_id):
@@ -87,18 +98,30 @@ def flag(request, object, object_id):
     if request.method == 'POST':
         reason = request.POST.get('reason')
         if not reason:
-            return JsonResponse({'message': 'Please select a reason.'}, status=400)
+            return
         if flag:
             flag.reason = reason
             flag.save()
-            return JsonResponse({'message': 'Flag updated successfully', 'action': 'flag'})
+            return JsonResponse(
+                {
+                    'message': 'Flag updated successfully', 
+                    'action': 'flag'
+                }
+            )
         else:
             if object == 'post':
-                flag = Flag.objects.create(user=request.user, post=post, reason=reason)
+                flag = Flag.objects.create(
+                    user=request.user, 
+                    post=post, 
+                    reason=reason
+                )
             elif object == 'comment':
-                flag = Flag.objects.create(user=request.user, comment=comment, reason=reason)
+                flag = Flag.objects.create(
+                    user=request.user, 
+                    comment=comment, 
+                    reason=reason
+                )
             return JsonResponse({'message': 'Flagged successfully', 'action': 'flag'})
-        
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
@@ -115,21 +138,32 @@ def toggle_save(request, object, object_id):
         return HttpResponse(status=400)
     if save:
         save.delete() 
-        return JsonResponse({ 'is_added': False, 'message': 'Unsaved', 'action': 'save' })
+        return JsonResponse(
+            { 
+                'is_added': False, 
+                'message': 'Unsaved', 
+                'action': 'save'
+            }
+        )
     else:
         if object == 'post':
             Save.objects.create(user=request.user, post=post)
         elif object == 'comment':
             Save.objects.create(user=request.user, comment=comment)  
-    return JsonResponse({ 'is_added': True, 'message': 'Saved', 'action': 'save' })
+    return JsonResponse(
+        { 
+            'is_added': True, 
+            'message': 'Saved', 
+            'action': 'save' 
+        }
+    )
 
 
-@login_required
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     sort_by = request.GET.get('sort', 'newest')
     top_level_comments = post.comments.filter(parent__isnull=True)
-    sorted_comments = comment_sort(top_level_comments, sort_by)
+    sorted_comments = sort_queries(top_level_comments, sort_by, 'comment_upvotes')
     interaction = user_interaction_state(request.user)
 
     context = {
@@ -145,20 +179,15 @@ def post_detail(request, post_id):
 @login_required
 def search_result(request):
     query = request.GET.get('query')
-    user_id = request.GET.get('user_id')
-    sort_by = request.GET.get('sort', 'newest')
-    name = request.GET.get('name')
-    url = request.GET.get('url', 'all')
-    posts, comments = searchQuery(query, Post, Comment, url, sort_by, request, user_id)
-
+    sort_by = request.GET.get('sort', '-upvotes_count')
+    posts = Post.search(query, sort_by=sort_by) 
+    comments = Comment.search(query, sort_by=sort_by)
+  
     context = {
         'posts': posts, 
         'comments': comments, 
         'query': query, 
-        'url': url, 
-        'user_id': user_id, 
-        'name': name, 
         'sort_by': sort_by 
-    }   
-
+    }
+    
     return render(request, 'posts/search_result.html', context)
