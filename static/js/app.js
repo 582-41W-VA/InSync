@@ -82,8 +82,10 @@ function handleInteractions(result, button){
     if (result) {
         if (result.action === 'upvote') {
             button.innerHTML = result.is_added
-                ? `<i class="fa-solid fa-heart"></i> ${result.upvotes}`
-                : `<i class="fa-regular fa-heart"></i> ${result.upvotes}`;
+                ? `<i class="fa-solid fa-heart"></i>
+                <p class="likes-count">Likes: ${result.upvotes}</p>`
+                : `<i class="fa-regular fa-heart"></i>
+                <p class="likes-count">Likes: ${result.upvotes}</p>`;
         }   
 
         if (result.action === 'flag') {
