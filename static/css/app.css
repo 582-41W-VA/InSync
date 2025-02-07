@@ -472,10 +472,17 @@ header .search-form .sort:hover{
   width: fit-content;
 }
 
+.home .likes-count{
+  position: absolute;
+  top: 50px;
+  left: -5px;
+}
+
 /* interaction partials */
 .interaction.flex{
   align-items: center;
   gap: 16px;
+  position: relative;
 }
 
 .interaction button{
@@ -493,11 +500,6 @@ header .search-form .sort:hover{
   background-color: var(--accent-color-light-blue);
   font-weight: 600;
   color: red;
-}
-
-.interaction .like button{
-  display: flex;
-  gap: 10px;
 }
 
 .interaction i{
