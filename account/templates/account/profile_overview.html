@@ -1,6 +1,9 @@
 {% extends 'base.html' %} 
 {% block 'title' %} Profile Overview {% endblock %} 
 {% block 'main' %}
+
+{% include "partials/flash_message.html" %}
+
 <p>Overview</p> 
 
 <li><a href="{% url 'account:logout' %}">Logout</a></li>
