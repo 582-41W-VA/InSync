@@ -1,4 +1,3 @@
-
 window.onload = function() {
     const nameField = document.querySelector('#id_username');
     const loginPass = document.querySelector('#id_password');
@@ -27,8 +26,6 @@ function headerClose() {
 }
 window.addEventListener('load', headerClose);
 window.addEventListener('resize', headerClose);
-
-
 function main() {
     document.body.addEventListener('submit', function(event) {
         if (event.target && event.target.matches('.action-form')) {
@@ -107,11 +104,20 @@ detailsElements.forEach(function(detailsElement) {
     const icon = detailsElement.querySelector('summary i');
     detailsElement.addEventListener('toggle', function() {
         if (detailsElement.open) {
-            icon.classList.remove('fa-regular', 'fa-flag');
-            icon.classList.add('fa-solid', 'fa-flag');
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fa-solid');
         } else {
-            icon.classList.remove('fa-solid', 'fa-flag');
-            icon.classList.add('fa-regular', 'fa-flag');
+            icon.classList.remove('fa-solid');
+            icon.classList.add('fa-regular');
         }
     });
 });
+
+
+const closeFlash = document.querySelectorAll('.flash-message i')
+closeFlash.forEach(function(close) {
+    close.addEventListener('click', function(event){
+        const closestFlash = event.target.closest('.flash-message')
+        if(closestFlash) closestFlash.remove()
+    })
+})

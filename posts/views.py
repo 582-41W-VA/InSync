@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .helpers import user_interaction_state, sort_queries
-from .models import Post, Comment, Save, Upvote, Flag
-from .forms import PostForm, MediaForm
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from .models import Post, Comment, Save, Upvote, Flag
 from django.http import HttpResponse, JsonResponse
+from .forms import PostForm, MediaForm
+from django.http import HttpResponse
+from django.contrib import messages
 
 
 def home(request):
@@ -30,6 +31,7 @@ def create_post(request):
             media.post = post
             media.save()
             post_form.save_m2m()
+            messages.success(request, "You have created a post")
             return redirect('posts:post_detail', post_id=post.id)
     else:
         post_form = PostForm()
@@ -159,6 +161,7 @@ def toggle_save(request, object, object_id):
     )
 
 
+@login_required
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     sort_by = request.GET.get('sort', 'newest')
