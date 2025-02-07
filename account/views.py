@@ -2,6 +2,7 @@ from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from .forms import ProfileUpdateForm, ProfileImage
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from posts.models import Post 
 from django.contrib.auth.forms import (
     UserCreationForm,
@@ -9,18 +10,18 @@ from django.contrib.auth.forms import (
     SetPasswordForm,
 )
 
-
 @login_required
-def index(request):
+def change_pass(request):
     if request.method == "POST":
         form = SetPasswordForm(user=request.user, data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect("account:index")
+            messages.success(request, "Password changed successfully please login!")
+            return redirect("account:login")
     else:
         form = SetPasswordForm(user=request.user)
     context = {"form": form}
-    return render(request, "account/index.html", context)
+    return render(request, "account/change_pass.html", context)
 
 
 def signup(request):
@@ -39,7 +40,8 @@ def login(request):
         return render(request, "account/login.html", context)
     user = form.get_user()
     django_login(request, user)
-    return redirect("account:index")
+    messages.success(request, "Welcome, post something cool")
+    return redirect("posts:home")
 
 
 @login_required
@@ -51,6 +53,7 @@ def update_profile(request):
         if form.is_valid() and profile_img.is_valid():
             form.save()
             profile_img.save()
+            messages.success(request, "Profile Updated Successfully")
             return redirect("account:profile_overview")
     else:
         form = ProfileUpdateForm(instance=profile)
