@@ -9,7 +9,7 @@
         {% for post in posts %}
         <div class="post-container flex">
             <div class="left">
-                {% include "components/profile_img.html" %}
+                {% include "partials/profile_img.html" %}
             </div>
 
             <div class="right">
@@ -18,10 +18,8 @@
                         <p>User: {{ post.user.username }}</p>
                         <p>{{ post.created_at|timesince }} ago</p>
                     </div>
-                    <div class="flex">
-                        <p>Save</p>
-                        <p>Flag</p>
-                        <p>Like</p>
+                    <div class="interaction flex">
+                        {% include "partials/post_interactions.html" %}
                     </div>
                 </div>
                 {% if post.title %}
@@ -60,9 +58,9 @@
                 {% endif %}
                 {% endfor %}
 
-                <div>
+                <div class="comments-link">
                     <a href="{% url 'posts:post_detail' post.id %}">
-                        <i class="fa-regular fa-comment"></i> 
+                        <i class="fa-regular fa-message"></i> 
                         {{ post.top_level_comments_count }}
                     </a>
                 </div>

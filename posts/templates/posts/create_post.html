@@ -6,9 +6,18 @@
         <h2 class="title">create post</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-
             <p>Title: {{ post_form.title }} </p>
-            <p>Tags: Select tag/Category {{ post_form.tags }}</p>
+
+            <p>Select Tag/Category</p>
+            <div class="tags">
+                {% for choice in post_form.tags %}
+                    <div class="tag">
+                        {{ choice.tag }}
+                        <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                    </div>   
+                {% endfor %}
+            </div>
+
             <p>Content:{{ post_form.media }}</p>
             {{ post_form.content }}
 
@@ -21,7 +30,6 @@
 
             {{ media_form.media }}
             <p>Link{{ post_form.url }}</p>
-            
             <button type="submit">Post</button>
         </form>
         <a href="{% url 'posts:home' %}">Cancel</a>

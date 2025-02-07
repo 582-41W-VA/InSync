@@ -2,6 +2,9 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
+from .helpers import sort_queries
+from django.db.models import Q
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -19,7 +22,13 @@ class Post(models.Model):
     url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
-    
+
+    @classmethod
+    def search(cls, query, sort_by='-upvotes_count'):
+        query_conditions = Q(title__icontains=query) | Q(content__icontains=query) | Q(tags__name__icontains=query)
+        posts = cls.objects.filter(query_conditions)
+        return sort_queries(posts, sort_by, 'post_upvotes')
+
     def upvote_count(self):
         return self.post_upvotes.count()
     
@@ -28,6 +37,9 @@ class Post(models.Model):
     
     def top_level_comments_count(self):
         return self.comments.filter(parent=None).count()
+    
+    def total_comments(self):
+        return self.comments.count()
     
     def __str__(self):
         return self.title
@@ -40,6 +52,11 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
+
+    @classmethod
+    def search(cls, query, sort_by='-upvotes_count'):
+        comments = cls.objects.filter(text__icontains=query)
+        return sort_queries(comments, sort_by, 'comment_upvotes')
 
     def __str__(self):
         return f"Comment by {self.user} in Post: {self.post.title}"

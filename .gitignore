@@ -1,6 +1,7 @@
 # ignore db
 db.sqlite3
 migrations
+media
 
 # Ignore compiled Python files
 __pycache__/
