@@ -1,7 +1,27 @@
 {% extends 'base.html' %}
-{% block 'title' %}Search{% endblock %}
-{% block 'main' %}
-
-<p>results</p>
-
+{% block title %}Search Results{% endblock %}
+{% block main %}
+<div class="search-results">
+    <h1>Posts</h1>
+    <div class="post">
+        <div class="post-header">
+            <img src="" alt="" class="">
+            <div class="post-info">
+                <span class="username">USERNAME123</span>
+                <span class="post-date">1 month ago</span>
+            </div>
+        </div>
+        <p class="post-content">Lorem ipsum dolor sit amet, consectetur</p>
+        <div class="post-tags">
+            <span class="tag">Technology</span>
+            <span class="tag">News</span>
+            <span class="tag">Social Media</span>
+        </div>
+        <div class="post-interactions">
+            <span class="likes">12 👍</span>
+            <span class="comments">150 💬</span>
+        </div>
+        <img src="" alt="Post Image" class="post-image">
+    </div>
+</div>
 {% endblock %}
