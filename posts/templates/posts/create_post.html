@@ -24,11 +24,11 @@
             <p>
                 Image/Video:
                 <label class="media-label" for="id_media">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Choose File
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Choose File drag and drop
                 </label>
+                {{ media_form.media }}
             </p>
 
-            {{ media_form.media }}
             <p>Link{{ post_form.url }}</p>
             <button type="submit">Post</button>
         </form>

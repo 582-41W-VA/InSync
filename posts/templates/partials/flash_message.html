@@ -1,0 +1,10 @@
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="flash-message">
+        <p>{{ message }}</p>
+        <i class="fa-solid fa-xmark"></i>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
