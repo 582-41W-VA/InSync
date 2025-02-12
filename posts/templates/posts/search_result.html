@@ -1,27 +1,53 @@
 {% extends 'base.html' %}
-{% block title %}Search Results{% endblock %}
+{% block 'title' %}Search Results{% endblock %}
 {% block 'main' %}
-<div class="search-results">
-    <h1>Posts</h1>
-    <div class="post">
-        <div class="post-header">
-            <img src="" alt="" class="">
-            <div class="post-info">
-                <span class="username">USERNAME123</span>
-                <span class="post-date">1 month ago</span>
+
+{% if posts %}
+<section class="post-comment-results">
+    <div class="container">
+        <h2 class="result-header">Posts</h2>
+        {% for post in posts %}
+        <div class="outer flex">
+            <div class="outer left">
+                <div class="nested-flex">
+                    <div class="nested-left">
+                        {% include "partials/profile_img.html" %}
+                    </div>
+                    <div class="nested-right flex">
+                        <div class="post-head flex">
+                            <div class="flex">
+                                <p>{{ post.user.username }}</p>
+                                <p>{{ post.created_at|timesince }} ago</p>
+                            </div>
+                        </div>
+                        {% if post.title %}
+                        <h3 class="post-title">
+                            <a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
+                        </h3>
+                        {% else %}
+                        <p>No Title</p>
+                        {% endif %}
+                    
+                        <div class="tags flex">
+                        {% for tag in post.tags.all %}
+                            <p><a href="#">{{ tag.name }}</a>,</p>
+                        {% endfor %}
+                        </div>
+                        {% include "partials/post_interactions2.html" %}
+                    </div>
+                </div>
             </div>
+            {% include "partials/media_post.html" %}
         </div>
-        <p class="post-content">Lorem ipsum dolor sit amet, consectetur</p>
-        <div class="post-tags">
-            <span class="tag">Technology</span>
-            <span class="tag">News</span>
-            <span class="tag">Social Media</span>
-        </div>
-        <div class="post-interactions">
-            <span class="likes">12 👍</span>
-            <span class="comments">150 💬</span>
-        </div>
-        <img src="" alt="Post Image" class="post-image">
+        <hr>
+        {% endfor %}
     </div>
-</div>
+</section>
+{% elif comments %}
+<section class="post-comment-results">
+    <div class="container">
+    {% include "partials/comment_search.html" with header="Comments"  %}
+    </div>
+</section>
+{% endif %}
 {% endblock %}
