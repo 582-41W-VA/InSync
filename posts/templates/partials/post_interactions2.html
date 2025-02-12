@@ -1,0 +1,26 @@
+<div class="interaction flex">
+    <form 
+        method="POST" 
+        action="{% url 'posts:toggle_upvote' 'post' post.id %}" 
+        class="action-form like">
+        {% csrf_token %}
+        <button type="submit">
+            {% if post.id in interaction.posts.upvoted %}
+            <i class="fa-solid fa-heart"></i> 
+            <p class="likes-count">{{ post.upvote_count }}</p>
+            {% else %}
+            <i class="fa-regular fa-heart"></i> 
+            <p class="likes-count">{{ post.upvote_count }}</p>
+            {% endif %}
+        </button>
+    </form>
+
+    <div class="comments-link">
+        <i class="fa-regular fa-message"></i> 
+        <p class="comment-count">{{ post.top_level_comments_count }}</p>
+    </div>
+
+    {% if post.user == request.user %}
+    <a class="btn-transparent" href="{% url 'posts:edit_post' post.id %}">Edit</a>
+    {% endif %}
+</div>

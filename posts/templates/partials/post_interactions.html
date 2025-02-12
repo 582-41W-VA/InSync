@@ -1,57 +1,47 @@
-<form 
-    method="POST" 
-    action="{% url 'posts:toggle_upvote' 'post' post.id %}" 
-    class="action-form like">
-    {% csrf_token %}
-    <button type="submit">
-        {% if post.id in interaction.posts.upvoted %}
-        <i class="fa-solid fa-heart"></i> 
-        <p class="likes-count">Likes: {{ post.upvote_count }}</p>
-        {% else %}
-        <i class="fa-regular fa-heart"></i> 
-        <p class="likes-count">Likes: {{ post.upvote_count }}</p>
-        {% endif %}
-    </button>
-</form>
-
-<form 
-    method="POST" 
-    action="{% url 'posts:toggle_save' 'post' post.id %}" 
-    class="action-form save">
-    {% csrf_token %}
-    <button type="submit">
-        {% if post.id in interaction.posts.saved %}
-        <i class="fa-solid fa-bookmark"></i>
-        {% else %}
-        <i class="fa-regular fa-bookmark"></i>
-        {% endif %}
-    </button>
-</form>
-
-<details>
-    <summary>
-        <i class="fa-regular fa-flag"></i>
-    </summary>
+<div class="interaction flex">
     <form 
         method="POST" 
-        action="{% url 'posts:flag' 'post' post.id %}" 
-        class="action-form">
+        action="{% url 'posts:toggle_save' 'post' post.id %}" 
+        class="action-form save">
         {% csrf_token %}
-        <label>
-            <input type="radio" name="reason" value="spam"> Spam
-        </label>
-        <label>
-            <input type="radio" name="reason" value="abuse"> Abuse
-        </label>
-        <label>
-            <input type="radio" name="reason" value="harassment"> Harassment
-        </label>
-        <label>
-            <input type="radio" name="reason" value="misinformation"> Misinformation
-        </label>
-        <label>
-            <input type="radio" name="reason" value="other"> Other
-        </label>
-        <button type="submit">Flag</button>
+        <button type="submit">
+            {% if post.id in interaction.posts.saved %}
+            <i class="fa-solid fa-bookmark"></i>
+            {% else %}
+            <i class="fa-regular fa-bookmark"></i>
+            {% endif %}
+        </button>
     </form>
-</details>
+
+    <details name="reqs">
+        <summary>
+            <i class="fa-regular fa-flag"></i>
+        </summary>
+        <form 
+            method="POST" 
+            action="{% url 'posts:flag' 'post' post.id %}" 
+            class="action-form">
+            {% csrf_token %}
+            <label>
+                <input type="radio" name="reason" value="spam"> Spam
+            </label>
+            <label>
+                <input type="radio" name="reason" value="abuse"> Abuse
+            </label>
+            <label>
+                <input type="radio" name="reason" value="harassment"> Harassment
+            </label>
+            <label>
+                <input type="radio" name="reason" value="misinformation"> Misinformation
+            </label>
+            <label>
+                <input type="radio" name="reason" value="other"> Other
+            </label>
+            <button type="submit">Flag</button>
+        </form>
+    </details>
+
+    {% if post.user == request.user %}
+    <a class="btn-transparent" href="{% url 'posts:delete_post' post.id %}">Delete</a>
+    {% endif %}
+</div>
