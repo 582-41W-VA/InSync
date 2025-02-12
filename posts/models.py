@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 from .helpers import sort_queries
 from django.db.models import Q
+from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 class Tag(models.Model):
@@ -24,7 +26,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(default=timezone.now)
 
     @classmethod
-    def search(cls, query, sort_by='-upvotes_count'):
+    def search(cls, query, sort_by='upvotes_count'):
         query_conditions = Q(title__icontains=query) | Q(content__icontains=query) | Q(tags__name__icontains=query)
         posts = cls.objects.filter(query_conditions)
         return sort_queries(posts, sort_by, 'post_upvotes')
@@ -33,13 +35,16 @@ class Post(models.Model):
         return self.post_upvotes.count()
     
     def first_media(self):
-        return self.media_post.first()
+        return self.media_post.first() if self.media_post.exists() else None
     
     def top_level_comments_count(self):
         return self.comments.filter(parent=None).count()
     
     def total_comments(self):
         return self.comments.count()
+    
+    def flag_count(self):
+        return self.flags.count()
     
     def __str__(self):
         return self.title
@@ -48,8 +53,8 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)  
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies') 
-    user = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE)
-    text = models.TextField()
+    user = models.ForeignKey(User, related_name="comment_user", on_delete=models.CASCADE)
+    text = models.TextField(max_length=200)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
 
@@ -58,18 +63,28 @@ class Comment(models.Model):
         comments = cls.objects.filter(text__icontains=query)
         return sort_queries(comments, sort_by, 'comment_upvotes')
 
-    def __str__(self):
-        return f"Comment by {self.user} in Post: {self.post.title}"
+    def flag_count(self):
+        return self.flags.count()
 
     def upvote_count(self):
         return self.comment_upvotes.count()
     
+    def __str__(self):
+        return f"Comment by {self.user} in Post: {self.post.title}"
     
+
+def validate_file_size(value):
+        max_size_mb = 5 
+        limit = max_size_mb * 1024 * 1024
+        if isinstance(value, InMemoryUploadedFile) and value.size > limit:
+            raise ValidationError(f"File size exceeds the {max_size_mb} MB limit.")
+    
+
 class Media(models.Model):
     post = models.ForeignKey(Post, null=True, blank=True, related_name="media_post", on_delete=models.CASCADE) 
-    media = models.FileField(upload_to='', null=True, blank=True)
+    media = models.FileField(upload_to='', null=True, blank=True, validators=[validate_file_size])
     uploaded_at = models.DateTimeField(default=timezone.now)
-
+    
     def __str__(self):
         return f"Media Post: {self.post}, ID: {self.post.id}, user: {self.post.user}"
     
@@ -79,8 +94,8 @@ class Media(models.Model):
                 ('.mp4', '.mov', '.webm')
             )
         return False
-
-
+    
+    
 class Upvote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name="post_upvotes", null=True, blank=True, on_delete=models.CASCADE)
@@ -113,10 +128,11 @@ class Save(models.Model):
 
 class Flag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
-    comment = models.ForeignKey(Comment, null=True, blank=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name="flags", null=True, blank=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, related_name="flags", null=True, blank=True, on_delete=models.CASCADE)
     reason = models.TextField()
     flagged_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
 
     unique_together = (
         ('user', 'post'),
