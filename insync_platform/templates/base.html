@@ -30,11 +30,15 @@
                 {% if request.user.is_authenticated %}
                 <ul class="profile">
                     <li class="create-post">
-                        <a href="{% url 'posts:create_post' %}">Create Post
+                        <a class="btn-yellow" href="{% url 'posts:create_post' %}">Create Post
                             <i class="fa-solid fa-plus"></i>
                         </a>
                     </li>
-                    <li><a href="{% url 'account:profile_overview'%}">{% include "partials/profile_img.html" %}</a></li>
+                    <li>
+                        <a href="{% url 'account:update_profile'%}">
+                            {% include "acc_partials/profile_image.html" %}
+                        </a>
+                    </li>
                 </ul>
                 {% else %}   
                 <ul class="logs">
