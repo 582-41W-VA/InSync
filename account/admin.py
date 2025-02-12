@@ -1,3 +1,30 @@
+from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
+from django.contrib.auth.models import User
+from .models import Profile
+from posts.models import Post
 
-# Register your models here.
+
+class CustomUserAdmin(UserAdmin):
+    model = User
+    list_display = ('username', 'first_name', 'last_name', 'email', 'is_staff', 'date_joined')
+    search_fields = ('username', 'email')
+    list_filter = ('is_staff', 'date_joined')
+
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'email', 'job_title', 'profile_image')
+    list_filter = ('job_title',)
+    search_fields = ('user__username', 'email', 'job_title')
+
+    def profile_image_display(self, obj):
+        if obj.profile_image:
+            return f'<img src="{obj.profile_image.url}" width="50" height="50" />'
+        return 'No image'
+    profile_image_display.allow_tags = True 
+    profile_image_display.short_description = 'Profile Image'
+
+    list_editable = ('email', 'job_title') 
+
+admin.site.register(Profile, ProfileAdmin)
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
