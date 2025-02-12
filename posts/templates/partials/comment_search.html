@@ -1,0 +1,31 @@
+
+        <h2 class="result-header">{{ header }}</h2>
+        {% for comment in comments %}
+        <div class="outer flex">
+            <div class="outer left">
+                <div class="nested-flex">
+                    <div class="nested-left">
+                        {% include "partials/profile_img.html" with post=comment %}
+                    </div>
+                    <div class="nested-right flex">
+                        <div class="post-head flex">
+                                <div class="flex">
+                                    <p>User: {{ comment.user.username }}</p>
+                                    <p>{{ comment.created_at|timesince }} ago</p>
+                                </div>
+                                <div class="comment-interaction flex">
+                                    {% include "partials/comment_interaction.html" %}
+                                </div>
+                        </div>
+                        {% if comment.text %}
+                        <h3 class="post-title">
+                            <a href="{% url 'posts:post_detail' comment.post.id %}">{{ comment.post.title }}</a>
+                        </h3>
+                        <p>{{ comment.text }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        {% endfor %}

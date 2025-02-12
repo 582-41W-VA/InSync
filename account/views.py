@@ -2,8 +2,10 @@ from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from .forms import ProfileUpdateForm, ProfileImage
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from django.contrib import messages
 from posts.models import Post 
+from .models import Profile
 from django.contrib.auth.forms import (
     UserCreationForm,
     AuthenticationForm,
@@ -20,7 +22,8 @@ def change_pass(request):
             return redirect("account:login")
     else:
         form = SetPasswordForm(user=request.user)
-    context = {"form": form}
+        user = request.user
+    context = {"form": form, 'user': user }
     return render(request, "account/change_pass.html", context)
 
 
@@ -29,10 +32,15 @@ def signup(request):
     context = {"form": form}
     if request.method == "GET" or not form.is_valid():
         return render(request, "account/signup.html", context)
-    form.save()
+    user = form.save()
+    profile = Profile.objects.create(user=user)
+    if user.is_superuser:
+        profile.job_title = 'Admin'  
+        profile.save()
+    messages.success(request, "Account created, please login!")
     return redirect("account:login")
-    
 
+    
 def login(request):
     form = AuthenticationForm(request, data=request.POST)
     context = {"form": form}
@@ -54,20 +62,12 @@ def update_profile(request):
             form.save()
             profile_img.save()
             messages.success(request, "Profile Updated Successfully")
-            return redirect("account:profile_overview")
+            return redirect("account:update_profile")
     else:
         form = ProfileUpdateForm(instance=profile)
         profile_img = ProfileImage(instance=profile)
     context = { 'form': form, 'profile_img': profile_img, 'profile': profile }
     return render(request, 'account/update_profile.html', context)
-
-
-@login_required
-def profile_overview(request):
-    user = request.user
-    posts = Post.objects.filter(user=user)
-    context = { 'user': user, 'posts': posts }
-    return render(request, "account/profile_overview.html", context)
 
 
 def logout(request):

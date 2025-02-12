@@ -1,0 +1,36 @@
+
+    <input type="checkbox" class="toggle-checkbox" id="toggle-comments{{ comment.id }}" style="display: none;">
+    <label for="toggle-comments{{ comment.id }}" class="toggle-btn">
+        <i class="fa-regular fa-plus"></i>
+        <i class="fa-solid fa-minus"></i>
+    </label> 
+    <div class="comment-container flex"> 
+        <div class="left">
+            {% include "partials/profile_img.html" with post=comment %}           
+        </div>
+        <div class="right">
+            <div class="comment-head flex">
+                <div class="flex">
+                    <p>{{ comment.user.username }}</p>
+                    <p>{{ comment.created_at|timesince }} ago</p>
+                </div>
+                <div class="comment-interaction flex">
+                    {% include "partials/comment_interaction.html" %}
+                </div>
+            </div>
+            <p class="content">{{ comment.text }}</p>
+
+            <div class="comment-interaction flex">
+                {% include "partials/comment_interaction2.html" %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Replies container (hidden initially) -->
+    {% if comment.replies.exists %}
+        <ul style="margin-left: 65px;" id="replies-{{ comment.id }}" class="comment-replies">
+            {% for reply in comment.replies.all %}
+                {% include "partials/comment.html" with comment=reply %}
+            {% endfor %}
+        </ul>
+    {% endif %}

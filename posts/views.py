@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .helpers import user_interaction_state, sort_queries
 from django.contrib.auth.decorators import login_required
+from django.middleware.csrf import get_token
+from django.template.loader import render_to_string
 from .models import Post, Comment, Save, Upvote, Flag
 from django.http import HttpResponse, JsonResponse
 from .forms import PostForm, MediaForm
@@ -62,7 +64,7 @@ def toggle_upvote(request, object, object_id):
         return JsonResponse(
             {
                 'is_added': False, 
-                'message': 'Upvote Removed',
+                'message': 'Unliked',
                 'action': 'upvote', 
                 'upvotes': upvotes 
             }
@@ -78,7 +80,7 @@ def toggle_upvote(request, object, object_id):
     return JsonResponse(
         {
             'is_added': True, 
-            'message': 'Upvoted',
+            'message': 'Liked',
             'action': 'upvote', 
             'upvotes': upvotes 
         }
@@ -164,7 +166,7 @@ def toggle_save(request, object, object_id):
 @login_required
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    sort_by = request.GET.get('sort', 'newest')
+    sort_by = request.GET.get('sort', 'upvotes')
     top_level_comments = post.comments.filter(parent__isnull=True)
     sorted_comments = sort_queries(top_level_comments, sort_by, 'comment_upvotes')
     interaction = user_interaction_state(request.user)
@@ -178,19 +180,250 @@ def post_detail(request, post_id):
 
     return render(request, "posts/post_detail.html", context)
 
+def create_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if not request.user.is_authenticated:
+        return JsonResponse({'redirect': '/account/login/'}, status=401)
+
+    parent_comment_id = request.POST.get('parent_comment_id')
+    parent_comment = None
+    if parent_comment_id:
+        parent_comment = get_object_or_404(Comment, id=parent_comment_id)
+
+    text = request.POST.get('comment_text')
+    if not text or text.strip() == '':
+        return JsonResponse(status=400)
+
+    comment = Comment.objects.create(
+        post=post,
+        user=request.user,
+        parent=parent_comment,
+        text=text
+    )
+
+    interaction = user_interaction_state(request.user)
+    comment_html = render_to_string('partials/comment.html', 
+        { 
+            'comment': comment, 
+            'interaction': interaction, 
+            'user': request.user,
+            'csrf_token': get_token(request),
+        }
+    )
+
+    messages.success(request, 'Comment Posted!')
+    flash_message_html = render_to_string('partials/flash_message.html', 
+        {
+            'messages': messages.get_messages(request),
+        }
+    )
+    
+    return JsonResponse(
+        {
+            'flash_message_html': flash_message_html,
+            'comment_html': comment_html,
+            'comment_id': comment.id,
+            'action': 'create'
+        }
+    )
+
+
+def edit_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if not request.user.is_authenticated:
+        return JsonResponse({'redirect': '/account/login/'}, status=401)
+
+    comment_id = request.POST.get('comment_id')
+    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+    new_text = request.POST.get('comment_text')
+
+    if not new_text:
+        return JsonResponse({'error': 'New comment is required.'}, status=400)
+
+    comment.text = new_text
+    comment.save()
+
+    interaction = user_interaction_state(request.user)
+    comment_html = render_to_string('partials/comment.html', 
+        { 
+            'comment': comment, 
+            'interaction': interaction, 
+            'user': request.user,
+            'csrf_token': get_token(request),
+        }
+    )
+
+    messages.success(request, 'Comment Edited!')
+    flash_message_html = render_to_string('partials/flash_message.html', 
+        {
+            'messages': messages.get_messages(request),
+        }
+    )
+
+    return JsonResponse(
+        {
+            'flash_message_html': flash_message_html,
+            'comment_html': comment_html,
+            'comment_id': comment.id,
+            'action': 'edit'
+        }
+    )
+
+
+def delete_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if not request.user.is_authenticated:
+        return JsonResponse({'redirect': '/account/login/'}, status=401)
+
+    comment_id = request.POST.get('comment_id')
+    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+    comment.delete()
+
+    messages.success(request, 'Comment Deleted!')
+    flash_message_html = render_to_string('partials/flash_message.html', 
+        {
+            'messages': messages.get_messages(request),
+        }
+    )
+
+    return JsonResponse(
+        {
+            'flash_message_html': flash_message_html,
+            'comment_id': comment_id,
+            'action': 'delete'
+        }
+    )
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, user=request.user)
+    if request.method == 'POST':
+        post_form = PostForm(request.POST, instance=post)
+        media_form = MediaForm(request.POST, request.FILES, instance=post.first_media())
+        if post_form.is_valid() and media_form.is_valid():
+            old_media = post.media_post.first()
+            if old_media:
+                old_media.media.delete()
+                old_media.delete()
+            post_form.save()
+            media_form.save()
+            return redirect('posts:post_detail', post_id=post.id)
+    else:
+        post_form = PostForm(instance=post)
+        media_form = MediaForm(instance=post.first_media())
+    context = {
+        'post_form': post_form,
+        'media_form': media_form,
+        'action': 'Edit',
+        'post': post
+    }
+    return render(request, 'posts/edit_post.html', context)
+
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, user=request.user)
+    if request.method == 'POST':
+        post.delete() 
+        return redirect('posts:home')  
+    return render(request, 'posts/delete_post.html', { 'post': post })
+
 
 @login_required
 def search_result(request):
     query = request.GET.get('query')
-    sort_by = request.GET.get('sort', '-upvotes_count')
+    sort_by = request.GET.get('sort', 'upvotes')
     posts = Post.search(query, sort_by=sort_by) 
     comments = Comment.search(query, sort_by=sort_by)
+    interaction = user_interaction_state(request.user)
   
     context = {
         'posts': posts, 
         'comments': comments, 
         'query': query, 
+        'sort_by': sort_by,
+        'interaction': interaction, 
+    }
+    return render(request, 'posts/search_result.html', context)
+
+
+@login_required
+def all_posts(request, user_id):
+    posts = Post.objects.filter(user__id=user_id)
+    interaction = user_interaction_state(request.user)
+    total_posts = posts.count()
+    sort_by = request.GET.get('sort', 'upvotes')
+    sorted_posts = sort_queries(posts, sort_by, 'post_upvotes')
+    context = {
+        'posts': sorted_posts, 
+        'total_posts': total_posts, 
+        'interaction': interaction,
+        'sort_by': sort_by 
+        }
+    return render(request, 'posts/all_posts.html', context)
+
+
+@login_required
+def saved_posts(request):
+    posts = Post.objects.filter(save__user=request.user)
+    interaction = user_interaction_state(request.user)
+    total_saved_posts = posts.count()
+    sort_by = request.GET.get('sort', 'upvotes')
+    sorted_posts = sort_queries(posts, sort_by, 'post_upvotes')
+    context = {
+        'posts': sorted_posts, 
+        'total_saved_posts': total_saved_posts, 
+        'interaction': interaction,
+        'sort_by': sort_by  
+    }
+    return render(request, 'posts/saved_posts.html', context)
+
+
+@login_required
+def liked_posts(request):
+    posts = Post.objects.filter(post_upvotes__user=request.user)
+    interaction = user_interaction_state(request.user)
+    total_liked_posts = posts.count()
+    sort_by = request.GET.get('sort', 'upvotes')
+    sorted_posts = sort_queries(posts, sort_by, 'post_upvotes')
+    context = { 
+        'posts': sorted_posts, 
+        'total_liked_posts': total_liked_posts, 
+        'interaction': interaction,
         'sort_by': sort_by 
     }
-    
-    return render(request, 'posts/search_result.html', context)
+    return render(request, 'posts/liked_posts.html', context)
+
+
+@login_required
+def saved_comments(request):
+    comments = Comment.objects.filter(save__user=request.user)
+    interaction = user_interaction_state(request.user)
+    total_saved_comments = comments.count()
+    sort_by = request.GET.get('sort', 'upvotes')
+    sorted_comments = sort_queries(comments, sort_by, 'comment_upvotes')
+
+    context = {
+        'comments': sorted_comments, 
+        'total_saved_comments': total_saved_comments,
+        'interaction': interaction,
+        'sort_by': sort_by,
+    }
+    return render(request, 'posts/saved_comments.html', context)
+
+
+@login_required
+def liked_comments(request):
+    comments = Comment.objects.filter(comment_upvotes__user=request.user)
+    interaction = user_interaction_state(request.user)
+    total_likes = comments.count()
+    sort_by = request.GET.get('sort', 'upvotes')
+    sorted_comments = sort_queries(comments, sort_by, 'comment_upvotes')
+
+    context = {
+        'comments': sorted_comments, 
+        'total_likes': total_likes,
+        'interaction': interaction,
+        'sort_by': sort_by,
+    }
+    return render(request, 'posts/liked_comments.html', context)

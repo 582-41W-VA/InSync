@@ -1,0 +1,50 @@
+<form 
+    method="POST" 
+    action="{% url 'posts:toggle_save' 'comment' comment.id %}" 
+    class="action-form">
+    {% csrf_token %}
+    <button type="submit">
+        {% if comment.id in interaction.comments.saved %}
+        <i class="fa-solid fa-bookmark"></i>
+        {% else %}
+        <i class="fa-regular fa-bookmark"></i>
+        {% endif %}
+    </button>
+</form>
+
+<details name="reqs">
+    <summary><i class="fa-regular fa-flag"></i></summary>
+    <form 
+        method="POST" 
+        action="{% url 'posts:flag' 'comment' comment.id %}" 
+        class="action-form">
+        {% csrf_token %}
+        <label>
+            <input type="radio" name="reason" value="spam"> Spam
+        </label>
+        <label>
+            <input type="radio" name="reason" value="abuse"> Abuse
+        </label>
+        <label>
+            <input type="radio" name="reason" value="harassment"> Harassment
+        </label>
+        <label>
+            <input type="radio" name="reason" value="misinformation"> Misinformation
+        </label>
+        <label>
+            <input type="radio" name="reason" value="other"> Other
+        </label>
+        <button type="submit">Flag</button>
+    </form>
+</details>
+
+{% if comment.user == user %}
+<form 
+    method="POST" 
+    action="{% url 'posts:delete_comment' comment.post.id %}" 
+    class="action-form">
+    {% csrf_token %}
+    <input type="hidden" name="comment_id" value="{{ comment.id }}">
+    <button type="submit" name="delete_comment"> <i class="fa-solid fa-xmark"></i></button>
+</form>
+{% endif %}

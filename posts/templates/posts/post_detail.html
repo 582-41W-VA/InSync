@@ -1,1 +1,50 @@
-{% include "partials/flash_message.html" %}
+{% extends 'base.html' %} 
+{% block 'title' %} {{ post.title }} {% endblock %} 
+{% block 'main' %}
+
+<div class="target-container">
+{% include "partials/flash_message.html" %}   
+</div>
+
+<section class="post">
+    <div class="container">
+        <a href="{% url 'posts:home' %}"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="posts">
+            {% include "partials/post.html" %}
+            <hr>
+        </div>
+    </div>
+</section>
+
+<section class="comment-section">
+    <div class="container">
+            <div>
+                <form 
+                    method="POST"
+                    action="{% url 'posts:create_comment' post.id %}"
+                    class="create-comment action-form">
+                    {% csrf_token %}
+                    <input type="text" name="comment_text" required placeholder="Enter your comment">
+                    <button type="submit" name="create_comment">comment</button>
+                </form>
+
+                <form 
+                    method="GET" 
+                    action="{% url 'posts:post_detail' post.id %}">
+                    {% csrf_token %}
+                    {% include "partials/sort.html" %}
+                </form>
+
+                <ul id="comments-list">
+                    {% for comment in comments %}
+                    <li id="comment-{{ comment.id }}" class="ea-comment">
+                        {% include "partials/comment.html" with comment=comment %}
+                    </li> 
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
