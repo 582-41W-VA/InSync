@@ -40,7 +40,6 @@ class PostAdmin(admin.ModelAdmin):
         return obj.upvote_count
     upvote_count.admin_order_field = 'upvote_count'  
 
-
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Flag, FlagAdmin)
