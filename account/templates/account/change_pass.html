@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 {% block 'title' %} Change Password {% endblock %}
 {% block 'main' %}
-<h2>Change Password</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <button>Submit</button>
-</form>
+{% include "partials/flash_message.html" %}
+{% include "acc_partials/profile_overview.html" %}
+<section class="change-password">
+    <div class="container">
+        <h2>Change Password</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button>Submit</button>
+        </form>
+    </div>
+</section>
 {% endblock %}
