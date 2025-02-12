@@ -1,6 +1,6 @@
 <form action="{% url 'posts:search_result' %}" method="GET" class="search-form">
     <i class="fa-solid fa-magnifying-glass"></i>
     {% csrf_token %}
-    <input type="text" name="query" placeholder="Search Posts" value="{{ request.GET.query }}">
+    <input type="text" name="query" placeholder="Search Posts and Comments" value="{{ request.GET.query }}">
     {% include "partials/sort.html" %}
 </form>
