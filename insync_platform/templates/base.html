@@ -12,16 +12,18 @@
 </head>
 
 <body>
-    <header>
+    <header class="main-header">
         <div class="container">
             <a class="logo" href="{% url 'posts:home' %}">
                 <h2>inSync</h2>
             </a>
             {% if request.path != '/account/login/' and request.path != '/account/signup/' %}
             {% include "partials/main_search.html" %}
+            <div class="search-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
             {% endif %}
             <div class="holder">
-                <div class="menu-icon img"></div>
                 <nav>
                     <ul class="home-icon"> 
                         <li><a href="{% url 'posts:home' %}">Home</a></li>
@@ -30,7 +32,7 @@
                 {% if request.user.is_authenticated %}
                 <ul class="profile">
                     <li class="create-post">
-                        <a class="btn-yellow" href="{% url 'posts:create_post' %}">Create Post
+                        <a class="btn-yellow" href="{% url 'posts:create_post' %}">Post
                             <i class="fa-solid fa-plus"></i>
                         </a>
                     </li>
@@ -48,6 +50,14 @@
                 </ul>
                 {% endif %}
             </div>
+        </div>
+    </header>
+    <header class="search-header" style="display: none;">
+        <div class="container">
+            <div class="back-btn" id="back-btn">Back</div>
+            {% if request.path != '/account/login/' and request.path != '/account/signup/' %}
+            {% include "partials/main_search.html" %}
+            {% endif %}
         </div>
     </header>
 
