@@ -6,10 +6,12 @@
         <h3 class="title">Create your profile to stay connected, engage with company updates, and collaborate with your colleagues on inSync!</h3>
         <div class="signup-form">
             <h2>Signup</h2>
-            <form method="post">
+            <form method="POST">
+                <div class="form-container">
                 {% csrf_token %}
-                {{ form }}
-                <button type="submit">Signup</button>
+                {{ form }}  
+                </div>
+                <button type="submit">Sign Up</button>
             </form>
         </div>
         <p class="signup-link">Already an inSync user? login <a href="{% url 'account:login' %}">here.</a></p>
