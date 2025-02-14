@@ -37,9 +37,7 @@
 
                 <ul id="comments-list">
                     {% for comment in comments %}
-                    <li id="comment-{{ comment.id }}" class="ea-comment">
-                        {% include "partials/comment.html" with comment=comment %}
-                    </li> 
+                    {% include "partials/comment.html" with comment=comment %}
                     {% endfor %}
                 </ul>
             </div>

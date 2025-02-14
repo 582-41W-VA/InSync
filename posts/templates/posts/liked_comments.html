@@ -4,7 +4,7 @@
 {% include "acc_partials/profile_overview.html" %}
 <section class="overview-posts">
   <div class="container">
-    <h2>Your Total Saved Comments ({{ total_likes }})</h2>
+    <h2>Your Total Liked Comments ({{ total_likes }})</h2>
     <form 
         method="GET" 
         action="{% url 'posts:liked_comments' %}">
