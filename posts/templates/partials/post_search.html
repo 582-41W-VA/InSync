@@ -1,0 +1,31 @@
+<h2 class="result-header">Posts</h2>
+{% for post in posts %}
+<div class="flex">
+    <div class="left">{% include "partials/profile_img.html" %}</div>
+    <div class="right">
+        <div class="flex">
+            <div class="content-wrapper">
+                <div class="post-head">
+                    <div class="flex">
+                        <p>{{ post.user.username }}</p>
+                        <p>{{ post.created_at|timesince }} ago</p>
+                    </div>
+                </div>
+                {% if post.title %}
+                <h2 class="post-title">
+                    <a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
+                </h2>
+                {% endif %}
+                <div class="tags flex">
+                {% for tag in post.tags.all %}
+                    <p><a href="#">{{ tag.name }}</a>,</p>
+                {% endfor %}
+                </div>
+                {% include "partials/post_interactions2.html" %}
+            </div>
+            {% include "partials/media_post.html" %}
+        </div>
+    </div>
+</div>
+<hr>
+{% endfor %}
