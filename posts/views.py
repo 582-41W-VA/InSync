@@ -325,6 +325,7 @@ def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id, user=request.user)
     if request.method == 'POST':
         post.delete() 
+        messages.success(request, 'Post Deleted')
         return redirect('posts:home')  
     return render(request, 'posts/delete_post.html', { 'post': post })
 
@@ -359,7 +360,7 @@ def all_posts(request, user_id):
         'total_posts': total_posts, 
         'interaction': interaction,
         'sort_by': sort_by 
-        }
+    }
     return render(request, 'posts/all_posts.html', context)
 
 

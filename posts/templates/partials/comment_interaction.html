@@ -1,3 +1,4 @@
+<div class="comment-interaction flex">
 <form 
     method="POST" 
     action="{% url 'posts:toggle_save' 'comment' comment.id %}" 
@@ -12,7 +13,7 @@
     </button>
 </form>
 
-<details name="reqs">
+<details name="reqs" class="flag">
     <summary><i class="fa-regular fa-flag"></i></summary>
     <form 
         method="POST" 
@@ -47,4 +48,5 @@
     <input type="hidden" name="comment_id" value="{{ comment.id }}">
     <button type="submit" name="delete_comment"> <i class="fa-solid fa-xmark"></i></button>
 </form>
+</div>
 {% endif %}

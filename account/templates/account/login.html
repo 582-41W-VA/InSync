@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block 'title' %} Login {% endblock %}
 {% block 'main' %}
-
 {% include "partials/flash_message.html" %}
-
 <section class="login">
     <div class="container">
         <h3 class="title">log in to stay connected and collaborate with your team</h3>
         <div class="login-form">
             <h2>login</h2>
-            <form method="post">
+            <form method="POST">
+                <div class="form-container">
                 {% csrf_token %}
-                {{ form }}
+                {{ form }}  
+                </div>
                 <button type="submit">login</button>
             </form>
         </div>

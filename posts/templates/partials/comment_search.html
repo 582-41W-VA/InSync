@@ -1,31 +1,41 @@
-
-        <h2 class="result-header">{{ header }}</h2>
-        {% for comment in comments %}
-        <div class="outer flex">
-            <div class="outer left">
-                <div class="nested-flex">
-                    <div class="nested-left">
-                        {% include "partials/profile_img.html" with post=comment %}
-                    </div>
-                    <div class="nested-right flex">
-                        <div class="post-head flex">
-                                <div class="flex">
-                                    <p>User: {{ comment.user.username }}</p>
-                                    <p>{{ comment.created_at|timesince }} ago</p>
-                                </div>
-                                <div class="comment-interaction flex">
-                                    {% include "partials/comment_interaction.html" %}
-                                </div>
-                        </div>
-                        {% if comment.text %}
-                        <h3 class="post-title">
-                            <a href="{% url 'posts:post_detail' comment.post.id %}">{{ comment.post.title }}</a>
-                        </h3>
-                        <p>{{ comment.text }}</p>
-                        {% endif %}
-                    </div>
+<h2 class="result-header">{{ header }}</h2>
+{% for comment in comments %}
+<div class="flex">
+    <div class="left">{% include "partials/profile_img.html" %}</div>
+    <div class="right">
+        <div class="content-wrapper">
+            <div class="post-head flex">
+                <div class="flex">
+                    <p>User: {{ comment.user.username }}</p>
+                    <p>{{ comment.created_at|timesince }} ago</p>
                 </div>
+                {% include "partials/comment_interaction.html" %}
+            </div>
+            {% if comment.text %}
+            <h3 class="post-title">
+                <a href="{% url 'posts:post_detail' comment.post.id %}">{{ comment.post.title }}</a>
+            </h3>
+            <p>{{ comment.text }}</p>
+            {% endif %}
+            <div class="comment-interaction flex">
+                <form 
+                    method="POST" 
+                    action="{% url 'posts:toggle_upvote' 'comment' comment.id %}" 
+                    class="action-form">
+                    {% csrf_token %}
+                    <button type="submit">
+                        {% if comment.id in interaction.comments.upvoted %}
+                        <i class="fa-solid fa-heart"></i> 
+                        <p class="likes-count">{{ comment.upvote_count }}</p>
+                        {% else %}
+                        <i class="fa-regular fa-heart"></i> 
+                        <p class="likes-count">{{ comment.upvote_count }}</p>
+                        {% endif %}
+                    </button>
+                </form>
             </div>
         </div>
-        <hr>
-        {% endfor %}
+    </div>
+</div>
+<hr>
+{% endfor %}

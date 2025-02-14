@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from .models import Profile
 from posts.models import Post
 
-
 class CustomUserAdmin(UserAdmin):
     model = User
     list_display = ('username', 'first_name', 'last_name', 'email', 'is_staff', 'date_joined')

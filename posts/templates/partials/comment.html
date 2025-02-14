@@ -1,8 +1,8 @@
-
+<li id="comment-{{ comment.id }}" class="ea-comment"> 
     <input type="checkbox" class="toggle-checkbox" id="toggle-comments{{ comment.id }}" style="display: none;">
     <label for="toggle-comments{{ comment.id }}" class="toggle-btn">
-        <i class="fa-regular fa-plus"></i>
-        <i class="fa-solid fa-minus"></i>
+        <i class="fa-solid fa-square-plus"></i>
+        <i class="fa-solid fa-square-minus"></i>
     </label> 
     <div class="comment-container flex"> 
         <div class="left">
@@ -14,23 +14,17 @@
                     <p>{{ comment.user.username }}</p>
                     <p>{{ comment.created_at|timesince }} ago</p>
                 </div>
-                <div class="comment-interaction flex">
-                    {% include "partials/comment_interaction.html" %}
-                </div>
+                {% include "partials/comment_interaction.html" %}
             </div>
             <p class="content">{{ comment.text }}</p>
-
-            <div class="comment-interaction flex">
-                {% include "partials/comment_interaction2.html" %}
-            </div>
+            {% include "partials/comment_interaction2.html" %}
         </div>
     </div>
-
-    <!-- Replies container (hidden initially) -->
     {% if comment.replies.exists %}
-        <ul style="margin-left: 65px;" id="replies-{{ comment.id }}" class="comment-replies">
-            {% for reply in comment.replies.all %}
-                {% include "partials/comment.html" with comment=reply %}
-            {% endfor %}
-        </ul>
+    <ul style="margin-left: 50px;" id="replies-{{ comment.id }}" class="comment-replies">
+    {% for reply in comment.replies.all %}
+        {% include "partials/comment.html" with comment=reply %}
+    {% endfor %}
+    </ul>
     {% endif %}
+</li>
