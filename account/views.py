@@ -59,6 +59,8 @@ def update_profile(request):
         form = ProfileUpdateForm(request.POST, instance=profile)
         profile_img = ProfileImage(request.POST, request.FILES, instance=profile)
         if form.is_valid() and profile_img.is_valid():
+            if not request.FILES.get('profile_image'):
+                profile.profile_image = None
             form.save()
             profile_img.save()
             messages.success(request, "Profile Updated Successfully")
