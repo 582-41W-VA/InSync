@@ -31,6 +31,10 @@ a {
   transition: 0.4s;
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 a:hover {
   text-decoration: underline;
 }
@@ -104,9 +108,9 @@ button:hover {
   padding: 8px 16px;
   border-radius: 24px;
   text-decoration: none;
-  white-space: nowrap;
   display: inline-block;
   transition: 0.4s;
+  white-space: nowrap;
 }
 
 .btn-yellow:hover{
@@ -140,6 +144,12 @@ textarea {
   border-radius: 24px;
   border: none;
   padding: 16px;
+  resize: none;
+}
+
+textarea::-webkit-scrollbar {
+  width: 6px; 
+  height: 6px;
 }
 
 input::placeholder, 
@@ -148,17 +158,13 @@ textarea::placeholder {
   font-family: "Kantumruy Pro", serif;
 }
 
-.header-open{
-  overflow: hidden;
-}
-
 img {
   background-size: cover;
   background-position: center;
 }
 
 .title{
-  max-width: 350px;
+  max-width: 340px;
   margin: 0 auto;
   text-align: center;
   font-weight: 500;
@@ -177,7 +183,8 @@ main{
   top: 12%;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 99;
+  z-index: 101;
+  white-space: nowrap;
 }
 
 .flash-message {
@@ -293,18 +300,37 @@ header .container {
   justify-content: space-between;
   align-items: center;
   height: 80px;
-  gap: 20px;
+  gap: 8px;
   position: relative;
 }
 
-header .menu-icon {
-  background-image: url(/static/images/icons8-menu-50.png);
-  background-position: center;
-  background-size: cover;
-  height: 20px;
-  width: 20px;
+header .search-icon{
+  font-size: 18px;
+}
+
+header .search-icon,
+.search-header .back-btn{
   cursor: pointer;
-  display: none;
+  border-radius: 24px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  transition: 0.4s;
+}
+
+header .search-icon:hover,
+.search-header .back-btn:hover{
+  padding: 8px 12px;
+  background-color: var(--accent-color-light-blue);
+  border: 1px solid var(--primary-color-blue);
+}
+
+.search-header{
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-header .search-form{
+  width: 70%;
 }
 
 header nav {
@@ -318,7 +344,7 @@ header .holder ul{
 
 header .holder{
   display: flex;
-  gap: 20px;
+  gap: 8px;
   align-items: center;
 }
 
@@ -379,11 +405,11 @@ header .search-form i{
   gap: 12px;
 }
 
-.comment-section .left {
-  width: 7%;
+.comment-section .comment-container .left {
+  width: 4%;
 }
 
-.comment-section .right{
+.comment-section .comment-container .right{
   width: 93%;
 }
 
@@ -422,14 +448,6 @@ header .search-form i{
   gap: 16px;
 }
 
-.comment-container .left{
-  width: 7%;
-}
-
-.comment-container .right{
-  width: 93%;
-}
-
 .comment-container .comment-head{
   align-items: center;
 }
@@ -466,15 +484,47 @@ header .search-form i{
   font-size: 16px;
   list-style-type: none;
   padding: 0;
-  margin: 8px 0;
   display: block;
+  position: static;
+  animation: none;
 }
 
 .errorlist {
+  display: block;
+  position: absolute;
+  top: -33px;
+  color: red;
+  width: 105%;
+  animation: fadeInOutAnimation 5s ease-in-out forwards;
+}
+
+@keyframes fadeInOutAnimation {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  20% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  80%{
+    opacity: 1;
+    visibility: visible;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.signup .helptext{
   display: none;
 }
 
-.login, .signup {
+.login {
   padding: 72px 0;
 }
 
@@ -485,27 +535,33 @@ header .search-form i{
   border-radius: 24px;
   margin: 0 auto;
   max-width: 500px;
+  padding-bottom: 110px;
 }
 
 .login .login-form h2,
 .signup .signup-form h2{
   text-align: center;
   text-transform: capitalize;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   font-weight: 600;
 }
 
-.login form, 
-.signup form {
+.login .login-form h2{
+  margin-bottom: 40px;
+}
+
+.login .form-container, 
+.signup .form-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 50px;
 }
 
 .login form div,
 .signup form div{
   display: flex;
   gap: 8px;
+  position: relative;
 }
 
 .login form div label,
@@ -539,7 +595,10 @@ header .search-form i{
 
 .login form button, 
 .signup form button {
-  margin-top: 20px;
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%; 
+  margin-top: 30px;
 }
 
 .login .login-link, 
@@ -557,10 +616,6 @@ header .search-form i{
 .login .login-link a:hover, 
 .signup .signup-link a:hover {
   text-decoration: none;
-}
-
-.signup .helptext{
-  display: none;
 }
 
 /* post */
@@ -704,40 +759,84 @@ details summary{
   border: 1px solid var(--primary-color-blue);
   border-radius: 24px;
   background-color: var(--accent-color-light-blue);
-  padding: 16px;
-  width: 170px;
+  width: 190px;
   position: absolute;
   top: 110%;
   right: 0px;
   z-index: 200; 
 }
 
+.interaction .flag form,
+.comment-interaction .flag form{
+ padding: 16px;
+}
+
+.interaction .flag form label,
+.comment-interaction .flag form label{
+  padding: 4px;
+  border-radius: 8px;
+  transition: 0.4s;
+ }
+
+.interaction .flag form label:hover,
+.comment-interaction .flag form label:hover{
+  background-color: #004e98;
+  padding: 4px;
+  color: var(--white);
+  border-radius: 8px;
+ }
+
 .comment-interaction .reply,
 .comment-interaction .edit{
-  display: unset;
-  top: 35px;
-  left: -15px;
-  width: 35vw;
-  height: 17vh;
-  background-color: transparent;
+  gap: 0;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 50vw;
+  min-width: 150px; 
+  max-width: 400px; 
+  height: 130px;
+  background-color: var(--accent-color-light-blue);
   border: none;
+  outline: 1px solid var(--primary-color-blue);
 }
 
 .comment-interaction details .reply textarea,
 .comment-interaction details .edit textarea{
   width: 100%;
-  height: 100%;
-  border-radius: 24px;
-  outline: 1px solid var(--black);
-  padding: 16px;
+  height: 100px;
+}
+
+.comment-interaction details .reply textarea:focus,
+.comment-interaction details .edit textarea:focus{
+  outline: none;
+}
+
+.comment-interaction details .reply .bottom,
+.comment-interaction details .edit .bottom{
+  background-color: var(--accent-color-light-blue);
+  border-bottom-right-radius: 24px;
+  border-bottom-left-radius: 24px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 4px 16px;
+  padding-bottom: 10px;
 }
 
 .comment-interaction details .reply button,
 .comment-interaction details .edit button{
-  background-color: transparent;
-  position: absolute;
-  right: 40px;
-  bottom: 25px;
+  color: #000;
+  margin: 0;
+}
+
+.comment-interaction details .reply button:nth-of-type(2),
+.comment-interaction details .edit button:nth-of-type(2){
+ background-color: var(--primary-color-blue);
+ color: var(--white);
+ padding: 8px 16px;
+ border-radius: 8px;
 }
 
 .interaction details form button, 
@@ -774,19 +873,20 @@ details summary{
 
 .toggle-btn i {
   font-size: 16px;
+  color: var(--primary-color-blue);
   transition: transform 0.3s ease;
   cursor: pointer;
 }
 
-.toggle-checkbox:checked + .toggle-btn i.fa-minus {
+.toggle-checkbox:checked + .toggle-btn i.fa-square-minus {
   display: none;
 }
 
-.toggle-checkbox:checked + .toggle-btn i.fa-plus {
+.toggle-checkbox:checked + .toggle-btn i.fa-square-plus {
   display: inline-block;
 }
 
-.toggle-checkbox:not(:checked) + .toggle-btn i.fa-plus {
+.toggle-checkbox:not(:checked) + .toggle-btn i.fa-square-plus {
   display: none;
 }
 
@@ -797,6 +897,11 @@ details summary{
 
 .comment-section .container{
   padding-left: 10px;
+}
+
+.comment-section .profile-img{
+  height: 40px;
+  width: 40px;
 }
 
 .toggle-btn{
@@ -871,7 +976,7 @@ details summary{
 
 .create-edit-post textarea{
   width: 100%;
-  height: 112px;
+  height: 200px;
   margin-bottom: 8px;
 }
 
@@ -880,12 +985,12 @@ details summary{
   margin-top: 20px;
 }
 
-
+/* edit profile and post media inputs */
 .media-input-container {
   border: 1px dashed var(--primary-color-blue);
   padding: 20px 0;
   margin: 15px 0;
-  border-radius: 10px;
+  border-radius: 24px;
   transition: border-color 0.3s ease;
   width: 100%;
   min-height: 150px;
@@ -909,7 +1014,8 @@ details summary{
   transition: background-color 0.3s ease;
 }
 
-#id_media {
+#id_media,
+#id_profile_image {
   display: none;
 }
 
@@ -929,7 +1035,7 @@ details summary{
   max-width: 100%;
   max-height: 300px;
   object-fit: contain;
-  border-radius: 5px;
+  border-radius: 24px;
 }
 
 .media-preview.empty {
@@ -968,33 +1074,40 @@ details summary{
   font-size: 0;
 }
 
-.wrapper #media-clear_id{
+.wrapper #media-clear_id,
+.wrapper #profile_image-clear_id{
   display: none;
+}
+
+.update-profile .profile-img{
+  width: 150px;
+  height: 150px;
+}
+
+.update-profile .clear-media-btn{
+  top: 20px;
 }
 
 /* post-results */
 /* comment-results */
 .post-comment-results .flex,
-.post-comment-results .nested-flex{
+.post-comment-results .content-wrapper{
   display: flex;
   gap: 12px;
 }
 
-.post-comment-results .nested-flex{
-  padding: 15px 0;
+.post-comment-results .content-wrapper{
+  flex-direction: column;
+  gap: 8px;
 }
 
-.post-comment-results .outer.flex{
-  justify-content: space-between;
+.post-comment-results h2{
+  font-weight: 500;
+  font-size: 20px;
 }
 
 .post-comment-results .interaction.flex{
   justify-content: flex-start;
-}
-
-.post-comment-results .nested-right{
-  flex-direction: column;
-  gap: 4px;
 }
 
 .post-comment-results .result-header{
@@ -1023,9 +1136,13 @@ details summary{
 .post-comment-results .media video,
 .post-comment-results .media img {
   width: auto;
-  height: 100%; 
+  max-height: 200px; 
   object-fit: cover; 
   border-radius: 8px;
+}
+
+.post-comment-results hr{
+ margin: 24px 0;
 }
 
 /* profile-overview */
@@ -1080,55 +1197,70 @@ footer {
     padding: 80px 0;
   }
   
-  .login .login-form {
+  /* .login .login-form {
     padding: 40px 60px;
+  } */
+}
+
+@media (max-width: 850px) {
+  .login {
+    padding: 80px 0;
   }
 
-  header .menu-icon {
-    display: block;
-    transition: 0.5s;
-  }
-
-  header nav{
-    display: none;
-  }
-
-  header.responsive {
-    background-color: var(--secondary-color-yellow);
-  }
-
-  header.responsive nav {
-    background-color: var(--secondary-color-yellow);
-    display: block;
-    width: 115%;
-    position: absolute;
-    top: 101%;
+  .comment-interaction .reply,
+  .comment-interaction .edit{
+    position: fixed;
+    width: 70vw;
+    top: 50%;
     left: 50%;
     transform: translate(-50%);
   }
 
-  header.responsive nav ul {
-    height: 100vh;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0;
-    gap: 40px;
-  }
-
-  header.responsive .logo h2 {
-    color: var(--black);
-  }
-
-  header.responsive .menu-icon {
-    background-image: url(/static/images/icons8-x-50.png);
+  .interaction details,
+  .comment-interaction details{
+    position: relative;
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .logo {
     font-size: 20px;
   }
+
+  .posts .post-container{
+    flex-direction: column;
+  }
+
+  .posts .post-container .right{
+    width: 100%;
+  }
+
+  .posts .post-container .right{
+    left: 100%;
+  }
+
+  .posts .post-head .flex:nth-of-type(1){
+    flex-direction: column;
+  }
+
+  .posts .flex{
+    gap: 2px;
+  }
+
+  .comment-section .comment-container{
+    flex-direction: column;
+  }
+
+  .comment-section .comment-head .flex:nth-of-type(1){
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+
+  .comment-section .flex{
+    gap: 2px;
+  }
+
+
 }
 
 @media (max-width: 600px) {
@@ -1148,6 +1280,18 @@ footer {
 
   .login .login-form {
     padding: 25px 40px;
+  }
+
+  .profile-overview .flex{
+    flex-direction: column;
+  }
+
+  .profile-overview .flex .left{
+    width: 100%;
+  }
+
+  .profile-overview .flex .right{
+    width: 100%;
   }
 
   footer {

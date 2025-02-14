@@ -9,23 +9,46 @@ window.onload = function() {
     if (confirmPassword) confirmPassword.placeholder = " Confirm password";
 };
 
-const menu = document.querySelector('.menu-icon')
-menu.addEventListener('click', headerToggle)
-function headerToggle() {
-    let header = document.querySelector("header");
-    header.classList.toggle("responsive");
-    document.body.classList.toggle("header-open");
-}
+const backButton = document.querySelector('.back-btn');
+const mainHeader = document.querySelector('.main-header');
+const searchHeader = document.querySelector('.search-header');
+const searchbar = document.querySelector('.search-form');
+const searchIcon = document.querySelector('.search-icon');
 
-function headerClose() {
-    let header = document.querySelector("header");
-    if (window.innerWidth > 900) {
-      header.classList.remove("responsive");
-      document.body.classList.remove("header-open");
+function replaceHeaders() {
+    if (!searchbar) return;
+    if (window.innerWidth <= 600) {
+    searchbar.replaceWith(searchIcon);
+    searchIcon.style.display = 'block'
+    } else {
+        if (searchHeader) {
+            searchIcon.replaceWith(searchbar);
+            searchIcon.style.display = 'none'
+            showMainHeader()
+        }
     }
 }
-window.addEventListener('load', headerClose);
-window.addEventListener('resize', headerClose);
+  
+function showMainHeader() {
+    searchHeader.replaceWith(mainHeader);
+    searchIcon.style.display = 'block'; 
+}
+
+function showSearchHeader() {
+    mainHeader.replaceWith(searchHeader);
+    searchIcon.style.display = 'none';  
+    searchHeader.style.display = 'flex';
+}
+
+function responsiveHeader(){
+    if (searchbar && searchIcon) {
+        backButton.addEventListener('click', showMainHeader);
+        searchIcon.addEventListener('click', showSearchHeader);
+        window.addEventListener('resize', replaceHeaders);
+        replaceHeaders()
+    }
+}
+responsiveHeader();
 
 function main() {
     document.body.addEventListener('submit', function(event) {
@@ -68,7 +91,6 @@ async function handleRequest(actionUrl, options, form){
                 return;
             }
         }
-
         const result = await response.json();
         if (result) {
             createComment(result, form)
@@ -79,6 +101,7 @@ async function handleRequest(actionUrl, options, form){
             closeDetails();
             iconState();
             handleFlashMessage(result, button)
+            cancel()
         }
     } catch (error) {
         console.error('Error submitting form:', error);
@@ -95,7 +118,7 @@ function createComment(result, form) {
             if (!targetContainer) {
                 const parentCommentElement = document.querySelector(`#comment-${parentCommentId}`);
                 targetContainer = document.createElement('ul');
-                targetContainer.style.marginLeft = '65px';
+                targetContainer.style.marginLeft = '50px';
                 targetContainer.id = `replies-${parentCommentId}`;
                 targetContainer.classList.add('comment-replies')
                 parentCommentElement.appendChild(targetContainer);
@@ -212,9 +235,7 @@ function closeFlashMessages(){
     const closeFlash = document.querySelectorAll('.flash-message i')
     closeFlash.forEach(function(close) {
         close.addEventListener('click', function(event){
-            console.log('hi')
             const closestFlash = event.target.closest('.flash-message')
-            console.log(closeFlash, closestFlash)
             if(closestFlash) closestFlash.remove()
         })
     })
@@ -228,6 +249,18 @@ function closeDetails() {
     });
 }
 
+function cancel(){
+    const cancelBtn = document.querySelectorAll('.cancel-btn')
+    cancelBtn.forEach(function(btn){
+        btn.addEventListener('click', function(event){
+            event.preventDefault
+            const closestDetailEl = event.target.closest('details')
+            if (closestDetailEl) closestDetailEl.removeAttribute('open');
+        })
+    })
+}
+cancel()
+
 const currentPath = window.location.pathname;
 const links = document.querySelectorAll('.profile-links a');
 links.forEach(link => {
@@ -236,63 +269,94 @@ links.forEach(link => {
     }
 });
 
-const fileInput = document.querySelector('#id_media');
-const mediaPreview = document.querySelector('.media-preview');
-const fileNamePreview = document.querySelector('.file-name-preview');
-const mediaInputContainer = document.querySelector('.media-input-container');
-const clearButton = document.getElementById('clear-media');
+const fileInputs = document.querySelectorAll('#id_media, #id_profile_image');
+const clearButtons = document.querySelectorAll('.clear-media-btn');
+const mediaPreviewContainers = document.querySelectorAll('.media-preview');
+const fileNamePreviews = document.querySelectorAll('.file-name-preview');
+const mediaInputContainers = document.querySelectorAll('.media-input-container');
 
-if (fileInput) {
-    fileInput.addEventListener('change', handleFileSelect);
-    mediaInputContainer.addEventListener('dragover', handleDragOver);
-    mediaInputContainer.addEventListener('dragleave', handleDragLeave);
-    mediaInputContainer.addEventListener('drop', handleFileSelectFromDrop);
-}
+fileInputs.forEach((fileInput, index) => {
+    const mediaPreview = mediaPreviewContainers[index];
+    const fileNamePreview = fileNamePreviews[index];
+    const mediaInputContainer = mediaInputContainers[index];
+    const clearButton = clearButtons[index];
 
-function handleFileSelect(event) {
+    if (mediaInputContainer) {
+        if (fileInput) {
+            fileInput.addEventListener('change', function(event) {
+                handleFileSelect(event, fileInput, mediaPreview, fileNamePreview, clearButton);
+            });
+    
+            mediaInputContainer.addEventListener('dragover', function(event) {
+                handleDragOver(event, mediaInputContainer);
+            });
+    
+            mediaInputContainer.addEventListener('dragleave', function(event) {
+                handleDragLeave(event, mediaInputContainer);
+            });
+    
+            mediaInputContainer.addEventListener('drop', function(event) {
+                handleFileSelectFromDrop(event, fileInput, mediaPreview, fileNamePreview, clearButton, mediaInputContainer);
+            });
+        }
+    }
+    
+    if (clearButton) {
+        clearButton.addEventListener('click', function(event) {
+            handleClear(event, fileInput, mediaPreview, fileNamePreview, clearButton);
+        });
+    }
+});
+
+function handleFileSelect(event, fileInput, mediaPreview, fileNamePreview, clearButton) {
     event.preventDefault();
     const file = event.target.files ? event.target.files[0] : event.dataTransfer.files[0];
     if (file) {
-        displayPreview(file);
+        displayPreview(file, mediaPreview, fileNamePreview);
+        if (clearButton) clearButton.style.display = 'block';
     }
 }
 
-function handleDragOver(event) {
+function handleDragOver(event, mediaInputContainer) {
     event.preventDefault();
-    mediaInputContainer.classList.add('dragging');
+    if (mediaInputContainer) {
+        mediaInputContainer.classList.add('dragging');
+    }
 }
 
-function handleDragLeave(event) {
+function handleDragLeave(event, mediaInputContainer) {
     event.preventDefault();
-    mediaInputContainer.classList.remove('dragging');
+    if (mediaInputContainer) {
+        mediaInputContainer.classList.remove('dragging');
+    }
 }
 
-function handleFileSelectFromDrop(event) {
+function handleFileSelectFromDrop(event, fileInput, mediaPreview, fileNamePreview, clearButton, mediaInputContainer) {
     event.preventDefault();
-    mediaInputContainer.classList.remove('dragging');
+    if (mediaInputContainer) mediaInputContainer.classList.remove('dragging');
     const file = event.dataTransfer.files[0];
 
     if (file) {
-        displayPreview(file);
+        displayPreview(event, file, mediaPreview, fileNamePreview);
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files; 
+        fileInput.files = dataTransfer.files;
     }
-
-    const checkbox = document.querySelector('#media-clear_id');
-    if (checkbox) {
-        checkbox.checked = false;
-    }
+    const profileCheckbox = document.querySelector('#profile_image-clear_id');
+    const mediaCheckbox = document.querySelector('#media-clear_id');
+    if (profileCheckbox) profileCheckbox.checked = false;
+    if (mediaCheckbox) mediaCheckbox.checked = false;
+    if (clearButton) clearButton.style.display = 'block';
 }
 
-function displayPreview(file) {
+function displayPreview(event, file, mediaPreview, fileNamePreview) {
+    event.preventDefault
     mediaPreview.innerHTML = '';
-    fileNamePreview.textContent = file.name;
-    const reader = new FileReader();
+    if (fileNamePreview) fileNamePreview.textContent = file.name;
 
+    const reader = new FileReader();
     reader.onload = function (e) {
         const mediaUrl = e.target.result;
-
         if (file.type.startsWith('image')) {
             const img = document.createElement('img');
             img.src = mediaUrl;
@@ -304,21 +368,18 @@ function displayPreview(file) {
             mediaPreview.appendChild(video);
         }
     };
-    clearButton.style.display = 'block';
     reader.readAsDataURL(file);
 }
 
-if (clearButton) {
-    clearButton.addEventListener('click', function(event) {
-    event.preventDefault()
+function handleClear(event, fileInput, mediaPreview, fileNamePreview, clearButton) {
+    event.preventDefault();
     fileInput.value = '';
     mediaPreview.innerHTML = '';
     fileNamePreview.textContent = '';
-    clearButton.style.display = 'none';
-
-    const checkbox = document.querySelector('#media-clear_id');
-    if (checkbox) {
-        checkbox.checked = true;
-    }
-});
+    
+    if (clearButton) clearButton.style.display = 'none';
+    const profileCheckbox = document.querySelector('#profile_image-clear_id');
+    const mediaCheckbox = document.querySelector('#media-clear_id');
+    if (profileCheckbox) profileCheckbox.checked = true;
+    if (mediaCheckbox) mediaCheckbox.checked = true;
 }
