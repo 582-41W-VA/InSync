@@ -8,16 +8,12 @@
                 <p>{{ post.user.username }}</p>
                 <p>{{ post.created_at|timesince }} ago</p>
             </div>
-            <div class="interaction flex">
-                {% include "partials/post_interactions.html" %}
-            </div>
+            {% include "partials/post_interactions.html" %} 
         </div>
         {% if post.title %}
         <h2 class="post-title">
             <a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
         </h2>
-        {% else %}
-        <p>No Title</p>
         {% endif %}
 
         <div class="tags flex">
