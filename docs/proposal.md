@@ -24,6 +24,7 @@ We will use the following tools and technologies to build **inSync**:
 
 - **HTML**: For the templates, to structure the content of the website.
 - **CSS**: For styling the website, including colors, fonts, and layout to make the site visually appealing and easy to use.
+- **JavaScript**: To enhance the functionality of the website by allowing interactive elements and dynamic components.
 - **Django**: For building the back-end of the website, including user accounts, posts, and data management. Django offers built-in user authentication and security features which will allow users to securely sign in and manage their accounts.
 - **SQLite**: The database used to store user data, posts, comments, and statistics.
 - **Figma**: We’ll use **Figma** to design the website’s look. It helps us create wireframes and mockups to show how everything will appear on the website.

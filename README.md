@@ -1,5 +1,7 @@
 ## Team Members: **Mohame**, **Nupur** & **Sara**
 
+**Note**: The presentation slide deck link is found after the installation steps.
+
 ## Weekly Deliverables (Due Every Week)
 
 **Figma Design File Link for Wireframes/Mockups:**
@@ -116,4 +118,6 @@ Once the superuser is created, you'll be able to log in at http://127.0.0.1:8000
 
 ## You're All Set!
 
-Enjoy using the "Insync Platform"!
+## Deliverables for Final Week:
+
+- [Presentation Slide Deck](https://www.figma.com/slides/G93mwPhottEidONojCBotD/Final-Presentation---LIA---Web-Project-%232?node-id=0-1&p=f&t=Z4Q6odPNJ8uDRpap-0)
