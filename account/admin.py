@@ -2,13 +2,23 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
 from django.contrib.auth.models import User
 from .models import Profile
-from posts.models import Post
+from django.db.models import Count
+from posts.models import Post, Comment
 
 class CustomUserAdmin(UserAdmin):
     model = User
-    list_display = ('username', 'first_name', 'last_name', 'email', 'is_staff', 'date_joined')
+    list_display = ('username', 'email', 'comment_count', 'is_staff', 'date_joined',)
     search_fields = ('username', 'email')
     list_filter = ('is_staff', 'date_joined')
+    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(comment_count=Count('comment_user'))
+        return queryset
+    
+    def comment_count(self, obj):
+        return obj.comment_count
+    comment_count.admin_order_field = 'comment_count' 
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'email', 'job_title', 'profile_image')

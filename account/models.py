@@ -9,3 +9,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'Profile user: {self.user.username}'
+    
+    def first_profile_image(self):
+        return self.profile_image if self.profile_image else None
