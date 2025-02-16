@@ -1,30 +1,56 @@
 <section class="profile-overview">
-  <div class="container">
-    <div class="flex">
-      <div class="left">
-        <div class="profile-container">
-          {% include "acc_partials/profile_image.html" %}
-          <div>
-            <p>{{ user.username }}</p>
-            <p>{{ user.profile.email }}</p>
-            <p>{{ user.profile.job_title }}</p>
-          </div>
+    <div class="container">
+        <div class="flex">
+            <div class="left">
+                <div class="profile-container">
+                    {% include "acc_partials/profile_image.html" %}
+                    <div>
+                        <p>{{ user.username }}</p>
+                        <p>{{ user.profile.email }}</p>
+                        <p>{{ user.profile.job_title }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <a class="btn-yellow" href="{% url 'account:update_profile' %}"
+                    >Update</a
+                >
+                <a class="btn-red" href="{% url 'account:logout' %}">Logout</a>
+            </div>
         </div>
-      </div>
-      <div class="right">
-        <a class="btn-yellow" href="{% url 'account:update_profile' %}">Update Profile</a>
-        <a class="btn-red" href="{% url 'account:logout' %}">Logout</a>
-      </div>
-    </div>
 
-    <div class="profile-links">
-      <a class="btn-transparent" href="{% url 'account:change_pass' %}">Password</a>
-      <a class="btn-transparent" href="{% url 'posts:all_posts' user.id %}">All posts</a>
-      <a class="btn-transparent" href="{% url 'posts:saved_posts' %}">Saved Posts</a>
-      <a class="btn-transparent" href="{% url 'posts:liked_posts' %}">Liked posts</a>
-      <a class="btn-transparent" href="{% url 'posts:saved_comments' %}">Saved Comments</a>
-      <a class="btn-transparent" href="{% url 'posts:liked_comments' %}">Liked Comments</a>
+        <div class="profile-links">
+            <a 
+				class="btn-transparent" 
+				href="{% url 'account:change_pass' %}">
+				Password
+			</a>
+            <a
+                class="btn-transparent"
+                href="{% url 'posts:all_posts' user.id %}">
+				All posts
+			</a>
+            <a 
+				class="btn-transparent" 
+				href="{% url 'posts:saved_posts' %}">
+				Saved Posts
+			</a>
+            <a 
+				class="btn-transparent" 
+				href="{% url 'posts:liked_posts' %}">
+				Liked posts
+			</a>
+            <a 
+				class="btn-transparent" 
+				href="{% url 'posts:saved_comments' %}">
+				Saved Comments
+			</a>
+            <a 
+				class="btn-transparent" 
+				href="{% url 'posts:liked_comments' %}">
+				Liked Comments
+			</a>
+        </div>
+        <hr>
     </div>
-  <hr>
-  </div>
 </section>

@@ -1,29 +1,35 @@
-{% extends 'base.html' %} 
-{% block 'title' %} Update Profile: {{ user.username }} {% endblock %} 
-{% block 'main' %}
-{% include "partials/flash_message.html" %}
-{% include "acc_partials/profile_overview.html" %}
+{% extends 'base.html' %}
+{% block 'title' %} Update Profile: {{request.user.username }} {% endblock %} 
+{% block 'main' %} 
+{% include "partials/flash_message.html" %} 
+{% include "acc_partials/profile_overview.html"%}
 <section class="update-profile">
-  <div class="container">
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form }}
-      <div class="media-input-container">
-        <div class="wrapper">
-            <label class="media-label" for="id_profile_image">
-              <i class="fa-solid fa-cloud-arrow-up"></i> Drag and Drop or upload media
-            </label>
-            <div class="media-preview">{% include "acc_partials/profile_image.html" %}</div>
-            {{ profile_img.profile_image }}
-            
-            <button type="button" id="clear-media" class="clear-media-btn">
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
-        </div>
-      </div>
-      <button type="submit">Update</button>
-    </form>
-    <a href="{% url 'posts:home' %}">Cancel</a>
-  </div>
+    <div class="container">
+        <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div class="media-input-container">
+                <div class="wrapper">
+                    <label class="media-label" for="id_profile_image">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 
+                        Drag and Drop or upload media
+                    </label>
+                    <div class="media-preview">
+                    {% include "acc_partials/profile_image.html" %}
+                    </div>
+                    {{ profile_img.profile_image }}
+                    <button type="button" id="clear-media" class="clear-media-btn">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="update-inputs">
+            {{ form }}
+            </div>
+            <div class="btn-container">
+                <button type="submit">Update</button>
+                <a href="javascript:history.back()">Cancel</a>
+            </div>
+        </form>
+    </div>
 </section>
 {% endblock %}
