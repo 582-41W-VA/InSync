@@ -74,10 +74,10 @@ class Comment(models.Model):
     
 
 def validate_file_size(value):
-        max_size_mb = 5 
-        limit = max_size_mb * 1024 * 1024
-        if isinstance(value, InMemoryUploadedFile) and value.size > limit:
-            raise ValidationError(f"File size exceeds the {max_size_mb} MB limit.")
+    max_size_mb = 5 
+    limit = max_size_mb * 1024 * 1024
+    if isinstance(value, InMemoryUploadedFile) and value.size > limit:
+        raise ValidationError(f"File size exceeds the {max_size_mb} MB limit.")
     
 
 class Media(models.Model):
@@ -86,7 +86,10 @@ class Media(models.Model):
     uploaded_at = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
-        return f"Media Post: {self.post}, ID: {self.post.id}, user: {self.post.user}"
+        if self.post:
+            return f"Media Post: {self.post} - ID: {self.post.id} - user: {self.post.user}"
+        else:
+            return "None"
     
     def is_video(self):
         if self.media:
@@ -94,8 +97,8 @@ class Media(models.Model):
                 ('.mp4', '.mov', '.webm')
             )
         return False
-    
-    
+
+     
 class Upvote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name="post_upvotes", null=True, blank=True, on_delete=models.CASCADE)
