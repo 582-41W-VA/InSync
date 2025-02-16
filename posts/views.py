@@ -3,7 +3,7 @@ from .helpers import user_interaction_state, sort_queries
 from django.contrib.auth.decorators import login_required
 from django.middleware.csrf import get_token
 from django.template.loader import render_to_string
-from .models import Post, Comment, Save, Upvote, Flag
+from .models import Post, Comment, Save, Upvote, Flag, Tag
 from django.http import HttpResponse, JsonResponse
 from .forms import PostForm, MediaForm
 from django.http import HttpResponse
@@ -12,11 +12,7 @@ from django.contrib import messages
 
 def home(request):
     posts = Post.objects.all()
-    if request.user.is_authenticated:
-        interaction = user_interaction_state(request.user)
-    else:
-        interaction = {}
-    context = { "posts": posts, 'interaction': interaction }
+    context = { "posts": posts }
     return render(request, "posts/home.html", context)
 
 
@@ -169,12 +165,10 @@ def post_detail(request, post_id):
     sort_by = request.GET.get('sort', 'upvotes')
     top_level_comments = post.comments.filter(parent__isnull=True)
     sorted_comments = sort_queries(top_level_comments, sort_by, 'comment_upvotes')
-    interaction = user_interaction_state(request.user)
 
     context = {
         "post": post,
         "comments": sorted_comments,
-        'interaction': interaction,
         'sort_by': sort_by
     }
 
@@ -201,11 +195,9 @@ def create_comment(request, post_id):
         text=text
     )
 
-    interaction = user_interaction_state(request.user)
     comment_html = render_to_string('partials/comment.html', 
         { 
             'comment': comment, 
-            'interaction': interaction, 
             'user': request.user,
             'csrf_token': get_token(request),
         }
@@ -235,19 +227,17 @@ def edit_comment(request, post_id):
 
     comment_id = request.POST.get('comment_id')
     comment = get_object_or_404(Comment, id=comment_id, user=request.user)
-    new_text = request.POST.get('comment_text')
+    new_text = request.POST.get('edit_comment_text')
 
-    if not new_text:
+    if not new_text or new_text.strip() == '':
         return JsonResponse({'error': 'New comment is required.'}, status=400)
 
     comment.text = new_text
     comment.save()
 
-    interaction = user_interaction_state(request.user)
     comment_html = render_to_string('partials/comment.html', 
         { 
-            'comment': comment, 
-            'interaction': interaction, 
+            'comment': comment,  
             'user': request.user,
             'csrf_token': get_token(request),
         }
@@ -307,6 +297,7 @@ def edit_post(request, post_id):
                 old_media.delete()
             post_form.save()
             media_form.save()
+            messages.success(request, 'Post Edited')
             return redirect('posts:post_detail', post_id=post.id)
     else:
         post_form = PostForm(instance=post)
@@ -336,14 +327,12 @@ def search_result(request):
     sort_by = request.GET.get('sort', 'upvotes')
     posts = Post.search(query, sort_by=sort_by) 
     comments = Comment.search(query, sort_by=sort_by)
-    interaction = user_interaction_state(request.user)
   
     context = {
         'posts': posts, 
         'comments': comments, 
         'query': query, 
-        'sort_by': sort_by,
-        'interaction': interaction, 
+        'sort_by': sort_by, 
     }
     return render(request, 'posts/search_result.html', context)
 
@@ -351,14 +340,12 @@ def search_result(request):
 @login_required
 def all_posts(request, user_id):
     posts = Post.objects.filter(user__id=user_id)
-    interaction = user_interaction_state(request.user)
     total_posts = posts.count()
     sort_by = request.GET.get('sort', 'upvotes')
     sorted_posts = sort_queries(posts, sort_by, 'post_upvotes')
     context = {
         'posts': sorted_posts, 
         'total_posts': total_posts, 
-        'interaction': interaction,
         'sort_by': sort_by 
     }
     return render(request, 'posts/all_posts.html', context)
@@ -367,14 +354,12 @@ def all_posts(request, user_id):
 @login_required
 def saved_posts(request):
     posts = Post.objects.filter(save__user=request.user)
-    interaction = user_interaction_state(request.user)
     total_saved_posts = posts.count()
     sort_by = request.GET.get('sort', 'upvotes')
     sorted_posts = sort_queries(posts, sort_by, 'post_upvotes')
     context = {
         'posts': sorted_posts, 
         'total_saved_posts': total_saved_posts, 
-        'interaction': interaction,
         'sort_by': sort_by  
     }
     return render(request, 'posts/saved_posts.html', context)
@@ -383,14 +368,12 @@ def saved_posts(request):
 @login_required
 def liked_posts(request):
     posts = Post.objects.filter(post_upvotes__user=request.user)
-    interaction = user_interaction_state(request.user)
     total_liked_posts = posts.count()
     sort_by = request.GET.get('sort', 'upvotes')
     sorted_posts = sort_queries(posts, sort_by, 'post_upvotes')
     context = { 
         'posts': sorted_posts, 
         'total_liked_posts': total_liked_posts, 
-        'interaction': interaction,
         'sort_by': sort_by 
     }
     return render(request, 'posts/liked_posts.html', context)
@@ -399,7 +382,6 @@ def liked_posts(request):
 @login_required
 def saved_comments(request):
     comments = Comment.objects.filter(save__user=request.user)
-    interaction = user_interaction_state(request.user)
     total_saved_comments = comments.count()
     sort_by = request.GET.get('sort', 'upvotes')
     sorted_comments = sort_queries(comments, sort_by, 'comment_upvotes')
@@ -407,7 +389,6 @@ def saved_comments(request):
     context = {
         'comments': sorted_comments, 
         'total_saved_comments': total_saved_comments,
-        'interaction': interaction,
         'sort_by': sort_by,
     }
     return render(request, 'posts/saved_comments.html', context)
@@ -416,7 +397,6 @@ def saved_comments(request):
 @login_required
 def liked_comments(request):
     comments = Comment.objects.filter(comment_upvotes__user=request.user)
-    interaction = user_interaction_state(request.user)
     total_likes = comments.count()
     sort_by = request.GET.get('sort', 'upvotes')
     sorted_comments = sort_queries(comments, sort_by, 'comment_upvotes')
@@ -424,7 +404,15 @@ def liked_comments(request):
     context = {
         'comments': sorted_comments, 
         'total_likes': total_likes,
-        'interaction': interaction,
         'sort_by': sort_by,
     }
     return render(request, 'posts/liked_comments.html', context)
+
+
+@login_required
+def category(request, tag_id):
+    category = get_object_or_404(Tag, id=tag_id)
+    posts =  category.post_tag.all()
+    total_posts = posts.count()
+    context = { "category": category, "posts": posts, 'total_posts': total_posts }
+    return render(request, "posts/category.html", context)
