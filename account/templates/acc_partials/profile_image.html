@@ -1,11 +1,10 @@
 {% if request.user.profile.profile_image %}
-<img
-  src="{{ request.user.profile.profile_image.url }}"
-  alt="Profile Image"
-  class="profile-img"
-/>
+<div
+    class="profile-img"
+    style="background-image: url('{{ request.user.profile.profile_image.url }}');">
+</div>
 {% else %}
 <div class="no-img">
-  <i class="fa-regular fa-user"></i>
+    <i class="fa-regular fa-user"></i>
 </div>
 {% endif %}

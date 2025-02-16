@@ -1,13 +1,14 @@
 <h2 class="result-header">{{ header }}</h2>
 {% for comment in comments %}
-<div class="flex">
-    <div class="left">{% include "partials/profile_img.html" %}</div>
+<div class="top-flex flex">
+    <div class="left">{% include "partials/profile_img.html" with post=comment %}</div>
     <div class="right">
         <div class="content-wrapper">
-            <div class="post-head flex">
+            <div class="comment-head flex">
                 <div class="flex">
-                    <p>User: {{ comment.user.username }}</p>
-                    <p>{{ comment.created_at|timesince }} ago</p>
+                    <strong>{{ comment.user.username }}</strong>
+                    {% load custom_filters %}
+                    <small>{{ comment.created_at|shortened_timesince }} ago</small>
                 </div>
                 {% include "partials/comment_interaction.html" %}
             </div>
@@ -17,11 +18,11 @@
             </h3>
             <p>{{ comment.text }}</p>
             {% endif %}
-            <div class="comment-interaction flex">
+            <div class="comment-interaction">
                 <form 
                     method="POST" 
                     action="{% url 'posts:toggle_upvote' 'comment' comment.id %}" 
-                    class="action-form">
+                    class="like action-form">
                     {% csrf_token %}
                     <button type="submit">
                         {% if comment.id in interaction.comments.upvoted %}

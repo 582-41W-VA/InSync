@@ -44,11 +44,12 @@ function responsiveHeader(){
     if (searchbar && searchIcon) {
         backButton.addEventListener('click', showMainHeader);
         searchIcon.addEventListener('click', showSearchHeader);
+        window.addEventListener('load', replaceHeaders);
         window.addEventListener('resize', replaceHeaders);
-        replaceHeaders()
     }
 }
 responsiveHeader();
+
 
 function main() {
     document.body.addEventListener('submit', function(event) {
@@ -118,7 +119,7 @@ function createComment(result, form) {
             if (!targetContainer) {
                 const parentCommentElement = document.querySelector(`#comment-${parentCommentId}`);
                 targetContainer = document.createElement('ul');
-                targetContainer.style.marginLeft = '50px';
+                targetContainer.style.marginLeft = '30px';
                 targetContainer.id = `replies-${parentCommentId}`;
                 targetContainer.classList.add('comment-replies')
                 parentCommentElement.appendChild(targetContainer);
@@ -127,9 +128,7 @@ function createComment(result, form) {
             targetContainer = document.querySelector('#comments-list');
         }
         if (result.comment_html) {
-            const newCommentElement = document.createElement('li');
-            newCommentElement.classList.add('ea-comment')
-            newCommentElement.id = `comment-${result.comment_id}`; 
+            const newCommentElement = document.createElement('div'); 
             newCommentElement.innerHTML = result.comment_html;
             targetContainer.appendChild(newCommentElement);
         }
@@ -337,7 +336,7 @@ function handleFileSelectFromDrop(event, fileInput, mediaPreview, fileNamePrevie
     const file = event.dataTransfer.files[0];
 
     if (file) {
-        displayPreview(event, file, mediaPreview, fileNamePreview);
+        displayPreview(file, mediaPreview, fileNamePreview);
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;
@@ -349,11 +348,9 @@ function handleFileSelectFromDrop(event, fileInput, mediaPreview, fileNamePrevie
     if (clearButton) clearButton.style.display = 'block';
 }
 
-function displayPreview(event, file, mediaPreview, fileNamePreview) {
-    event.preventDefault
+function displayPreview(file, mediaPreview, fileNamePreview) {
     mediaPreview.innerHTML = '';
     if (fileNamePreview) fileNamePreview.textContent = file.name;
-
     const reader = new FileReader();
     reader.onload = function (e) {
         const mediaUrl = e.target.result;
@@ -375,8 +372,7 @@ function handleClear(event, fileInput, mediaPreview, fileNamePreview, clearButto
     event.preventDefault();
     fileInput.value = '';
     mediaPreview.innerHTML = '';
-    fileNamePreview.textContent = '';
-    
+    if (fileNamePreview) fileNamePreview.textContent = '';
     if (clearButton) clearButton.style.display = 'none';
     const profileCheckbox = document.querySelector('#profile_image-clear_id');
     const mediaCheckbox = document.querySelector('#media-clear_id');

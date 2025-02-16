@@ -3,7 +3,7 @@ from .models import Post, Comment, Tag, Upvote, Flag, Media, Save
 from django.db.models import Count
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post', 'user', 'created_at', 'updated_at', 'text', 'upvote_count', 'flag_count')
+    list_display = ('id', 'post', 'user', 'upvote_count', 'flag_count', 'created_at', 'updated_at')
     list_filter = ('created_at', 'updated_at',)
     search_fields = ('text', 'user')
 
@@ -26,24 +26,37 @@ class UpvoteAdmin(admin.ModelAdmin):
     list_filter = ('upvoted_at',)
     search_fields = ('user__username', 'post__title', 'comment__text')
 
+class SaveAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'post', 'comment', 'saved_at')
+    list_filter = ('saved_at',)
+    search_fields = ('user__username', 'post__title', 'comment__text')
+
+class MediaAdmin(admin.ModelAdmin):
+    list_display = ('id', 'post',)
+    list_filter = ()
+    search_fields = ('user__username', 'post__title')
+
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'user', 'created_at', 'updated_at', 'upvote_count', 'top_level_comments_count', 'total_comments', 'flag_count')
+    list_display = ('id', 'title', 'user', 'comment_count', 'upvote_count', 'flag_count', 'created_at', 'updated_at',)
     list_filter = ('tags', 'created_at',)
     search_fields = ('title', 'content')
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.annotate(upvote_count=Count('post_upvotes'))
+        queryset = queryset.annotate(
+            comment_count=Count('comments')
+        )
         return queryset
 
-    def upvote_count(self, obj):
-        return obj.upvote_count
-    upvote_count.admin_order_field = 'upvote_count'  
+    def comment_count(self, obj):
+        return obj.comment_count  
+    comment_count.admin_order_field = 'comment_count' 
 
-admin.site.register(Post, PostAdmin)
 admin.site.register(Comment, CommentAdmin)
-admin.site.register(Flag, FlagAdmin)
 admin.site.register(Upvote, UpvoteAdmin)
+admin.site.register(Media, MediaAdmin)
+admin.site.register(Post, PostAdmin)
+admin.site.register(Flag, FlagAdmin)
+admin.site.register(Save, SaveAdmin)
 admin.site.register(Tag)
-admin.site.register(Media)
-admin.site.register(Save)
+

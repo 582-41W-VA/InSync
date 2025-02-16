@@ -14,13 +14,11 @@
             {% endif %}
         </button>
     </form>
-
     <div class="comments-link">
         <i class="fa-regular fa-message"></i> 
         <p class="comment-count">{{ post.top_level_comments_count }}</p>
     </div>
-
     {% if post.user == request.user %}
-    <a class="btn-transparent" href="{% url 'posts:edit_post' post.id %}">Edit</a>
+    <a class="btn-yellow edit" href="{% url 'posts:edit_post' post.id %}">Edit</a>
     {% endif %}
 </div>

@@ -40,8 +40,7 @@
             <button type="submit">Flag</button>
         </form>
     </details>
-
     {% if post.user == request.user %}
-    <a class="btn-transparent" href="{% url 'posts:delete_post' post.id %}">Delete</a>
+    <a class="btn-yellow" href="{% url 'posts:delete_post' post.id %}">Delete</a>
     {% endif %}
 </div>

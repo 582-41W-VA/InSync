@@ -11,8 +11,9 @@
         <div class="right">
             <div class="comment-head flex">
                 <div class="flex">
-                    <p>{{ comment.user.username }}</p>
-                    <p>{{ comment.created_at|timesince }} ago</p>
+                    <strong>{{ comment.user.username }}</strong>
+                    {% load custom_filters %}
+                    <small>{{ comment.created_at|shortened_timesince }} ago</small>
                 </div>
                 {% include "partials/comment_interaction.html" %}
             </div>
@@ -21,7 +22,7 @@
         </div>
     </div>
     {% if comment.replies.exists %}
-    <ul style="margin-left: 50px;" id="replies-{{ comment.id }}" class="comment-replies">
+    <ul style="margin-left: 30px;" id="replies-{{ comment.id }}" class="comment-replies">
     {% for reply in comment.replies.all %}
         {% include "partials/comment.html" with comment=reply %}
     {% endfor %}

@@ -1,58 +1,58 @@
 <div class="comment-interaction flex">
-<form 
-    method="POST" 
-    action="{% url 'posts:toggle_upvote' 'comment' comment.id %}" 
-    class="action-form">
-    {% csrf_token %}
-    <button type="submit">
-        {% if comment.id in interaction.comments.upvoted %}
-        <i class="fa-solid fa-heart"></i> 
-        <p class="likes-count">{{ comment.upvote_count }}</p>
-        {% else %}
-        <i class="fa-regular fa-heart"></i> 
-        <p class="likes-count">{{ comment.upvote_count }}</p>
-        {% endif %}
-    </button>
-</form>
-
-<details id="replyDetails" name="reqs">
-    <summary>
-        <i class="fa-regular fa-comment"></i>
-    </summary>
     <form 
         method="POST" 
-        action="{% url 'posts:create_comment' comment.post.id %}" 
-        class="reply action-form">
+        action="{% url 'posts:toggle_upvote' 'comment' comment.id %}" 
+        class="like action-form">
         {% csrf_token %}
-        <textarea 
-            name="comment_text" 
-            required>
-        </textarea>
-        <input type="hidden" name="parent_comment_id" value="{{ comment.id }}"> 
-        <div class="bottom">
-            <div class='cancel-btn'>Cancel</div>
-            <button type="submit" name="create_comment">Reply</button>
-        </div> 
+        <button type="submit">
+            {% if comment.id in interaction.comments.upvoted %}
+            <i class="fa-solid fa-heart"></i> 
+            <p class="likes-count">{{ comment.upvote_count }}</p>
+            {% else %}
+            <i class="fa-regular fa-heart"></i> 
+            <p class="likes-count">{{ comment.upvote_count }}</p>
+            {% endif %}
+        </button>
     </form>
-</details>
 
-{% if comment.user == user %}
-<details name="reqs">
-    <summary>
-        <i class="fa-regular fa-pen-to-square"></i>
-    </summary>
-    <form 
-        method="POST" 
-        action="{% url 'posts:edit_comment' comment.post.id %}" 
-        class="edit action-form">
-        {% csrf_token %}
-        <textarea name="comment_text" required>{{ comment.text }}</textarea>
-        <input type="hidden" name="comment_id" value="{{ comment.id }}">
-        <div class="bottom">
-            <div class='cancel-btn'>Cancel</div>
-            <button type="submit" name="edit_comment">Edit</button>
-        </div> 
-    </form>
-</details>
+    <details id="replyDetails" name="reqs" style="margin-left: 20px;">
+        <summary>
+            <i class="fa-regular fa-comment"></i>
+        </summary>
+        <form 
+            method="POST" 
+            action="{% url 'posts:create_comment' comment.post.id %}" 
+            class="reply action-form">
+            {% csrf_token %}
+            <textarea 
+                name="comment_text" id="comment_text"
+                required>
+            </textarea>
+            <input type="hidden" name="parent_comment_id" value="{{ comment.id }}"> 
+            <div class="bottom">
+                <div class='cancel-btn'>Cancel</div>
+                <button type="submit" name="create_comment">Reply</button>
+            </div> 
+        </form>
+    </details>
+
+    {% if comment.user == user %}
+    <details name="reqs">
+        <summary>
+            <i class="fa-regular fa-pen-to-square"></i>
+        </summary>
+        <form 
+            method="POST" 
+            action="{% url 'posts:edit_comment' comment.post.id %}" 
+            class="edit action-form">
+            {% csrf_token %}
+            <textarea name="edit_comment_text" id="edit_comment_text" required>{{ comment.text }}</textarea>
+            <input type="hidden" name="comment_id" value="{{ comment.id }}">
+            <div class="bottom">
+                <div class='cancel-btn'>Cancel</div>
+                <button type="submit" name="edit_comment">Edit</button>
+            </div> 
+        </form>
+    </details>
+    {% endif %}
 </div>
-{% endif %}

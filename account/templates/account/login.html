@@ -8,10 +8,8 @@
         <div class="login-form">
             <h2>login</h2>
             <form method="POST">
-                <div class="form-container">
                 {% csrf_token %}
                 {{ form }}  
-                </div>
                 <button type="submit">login</button>
             </form>
         </div>

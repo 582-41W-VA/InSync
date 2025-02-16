@@ -1,13 +1,17 @@
 {% if post.first_media and post.first_media.media %}
-  <div class="media">
+<div class="media">
     {% if post.first_media.is_video %}
-      <video controls class="media-content">
+    <video controls class="media-content">
         <source src="{{ post.first_media.media.url }}" type="video/mp4" />
-      </video>
+    </video>
     {% else %}
-      <img class="media-content" src="{{ post.first_media.media.url }}" alt="Post Image" />
+    <a href="{% url 'posts:post_detail' post.id %}">
+        <img
+            class="media-content"
+            src="{{ post.first_media.media.url }}"
+            alt="Post Image"
+        />
+    </a>
     {% endif %}
-  </div>
+</div>
 {% endif %}
-
-
