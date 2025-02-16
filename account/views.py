@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from posts.models import Post 
 from .models import Profile
+import os
 from django.contrib.auth.forms import (
     UserCreationForm,
     AuthenticationForm,
@@ -14,6 +15,7 @@ from django.contrib.auth.forms import (
 
 @login_required
 def change_pass(request):
+    user = request.user
     if request.method == "POST":
         form = SetPasswordForm(user=request.user, data=request.POST)
         if form.is_valid():
@@ -22,7 +24,6 @@ def change_pass(request):
             return redirect("account:login")
     else:
         form = SetPasswordForm(user=request.user)
-        user = request.user
     context = {"form": form, 'user': user }
     return render(request, "account/change_pass.html", context)
 
@@ -59,8 +60,13 @@ def update_profile(request):
         form = ProfileUpdateForm(request.POST, instance=profile)
         profile_img = ProfileImage(request.POST, request.FILES, instance=profile)
         if form.is_valid() and profile_img.is_valid():
-            if not request.FILES.get('profile_image'):
-                profile.profile_image = None
+            if request.FILES.get('profile_image'):
+                new_image = request.FILES['profile_image']
+                if profile.profile_image:
+                    old_image_path = profile.profile_image.path
+                    if os.path.isfile(old_image_path):
+                        os.remove(old_image_path)
+                profile.profile_image = new_image
             form.save()
             profile_img.save()
             messages.success(request, "Profile Updated Successfully")
@@ -68,7 +74,7 @@ def update_profile(request):
     else:
         form = ProfileUpdateForm(instance=profile)
         profile_img = ProfileImage(instance=profile)
-    context = { 'form': form, 'profile_img': profile_img, 'profile': profile }
+    context = {'form': form, 'profile_img': profile_img, 'profile': profile}
     return render(request, 'account/update_profile.html', context)
 
 
