@@ -20,7 +20,7 @@ class MediaForm(forms.ModelForm):
 
     def clean_media(self):
         media = self.cleaned_data.get('media')
-        valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', 'webp', '.mp4', '.mov', '.webm'}
+        valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', 'avif', 'webp', '.mp4', '.mov', '.webm'}
         if media and not any(media.name.lower().endswith(ext) for ext in valid_extensions):
             raise forms.ValidationError("File type not supported")
         return media
