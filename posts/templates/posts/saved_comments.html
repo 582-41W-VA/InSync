@@ -3,19 +3,16 @@
 {% block 'main' %}
 {% include "acc_partials/profile_overview.html" %}
 <section class="overview-posts">
-  <div class="container">
-    <h2>Your Total Saved Comments ({{ total_saved_comments }})</h2>
-    <form 
-        method="GET" 
-        action="{% url 'posts:saved_comments' %}">
-        {% csrf_token %}
-        {% include "partials/sort.html" %}
-    </form>
-  </div>
+    <div class="container">
+        <h2>Saved Comments ({{ total_saved_comments }})</h2>
+        <form method="GET" action="{% url 'posts:saved_comments' %}">
+            {% csrf_token %} {% include "partials/sort.html" %}
+        </form>
+    </div>
 </section>
-<section class="post-comment-results">
-  <div class="container">
-  {% include "partials/comment_search.html" %}
-  </div>
+<section class="comment-results">
+    <div class="container">
+        {% include "partials/comment_search.html" with header="Comments" %}
+    </div>
 </section>
 {% endblock %}

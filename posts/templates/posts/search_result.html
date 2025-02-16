@@ -2,13 +2,13 @@
 {% block 'title' %}Search Results{% endblock %}
 {% block 'main' %}
 {% if posts %}
-<section class="post-comment-results">
+<section class="post-results">
     <div class="container">  
     {% include "partials/post_search.html" %}
     </div>
 </section>
 {% elif comments %}
-<section class="post-comment-results">
+<section class="comment-results">
     <div class="container">
     {% include "partials/comment_search.html" with header="Comments"  %}
     </div>

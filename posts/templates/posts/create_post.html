@@ -6,30 +6,34 @@
         <h2 class="title">create post</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <p>Title: {{ post_form.title }} </p>
-
+            <p>Title: {{ post_form.title }}</p>
             <p>Select Tag/Category</p>
             <div class="tags">
                 {% for choice in post_form.tags %}
-                    <div class="tag">
-                        {{ choice.tag }}
-                        <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                    </div>   
+                <div class="tag">
+                    {{ choice.tag }}
+                    <label for="{{ choice.id_for_label }}"
+                        >{{ choice.choice_label }}</label
+                    >
+                </div>
                 {% endfor %}
             </div>
-
             <p>Content:{{ post_form.media }}</p>
             {{ post_form.content }}
-
             <div class="media-input-container">
                 <div class="wrapper">
                     <label class="media-label" for="id_media">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Drag and Drop or upload media
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Drag and Drop
+                        or upload media
                     </label>
                     {{ media_form.media }}
                     <div class="media-preview"></div>
                     <div class="file-name-preview"></div>
-                    <button id="clear-media" class="clear-media-btn" style="display:none;">
+                    <button
+                        id="clear-media"
+                        class="clear-media-btn"
+                        style="display: none"
+                    >
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>
@@ -37,7 +41,6 @@
             <p>Link{{ post_form.url }}</p>
             <button type="submit">Post</button>
         </form>
-        <a href="{% url 'posts:home' %}">Cancel</a>
     </div>
 </section>
 {% endblock %}
