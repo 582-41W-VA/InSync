@@ -5,8 +5,9 @@
     <div class="right">
         <div class="post-head flex">
             <div class="flex">
-                <p>{{ post.user.username }}</p>
-                <p>{{ post.created_at|timesince }} ago</p>
+                <strong>{{ post.user.username }}</strong>
+                {% load custom_filters %}
+                <p>{{ post.created_at|shortened_timesince }} ago</p>
             </div>
             {% include "partials/post_interactions.html" %} 
         </div>
@@ -18,17 +19,23 @@
 
         <div class="tags flex">
         {% for tag in post.tags.all %}
-            <p><a href="#">{{ tag.name }}</a>,</p>
+            <p><a class="tags-urls" href="{% url 'posts:category' tag.id %}">{{ tag.name }}</a>,</p>
         {% endfor %}
         </div>
 
-        <p class="content">{{ post.content|safe }}</p>
+        <a href="{% url 'posts:post_detail' post.id %}">
+            <p class="content">{{ post.content|safe }}</p>
+        </a>
 
-        {% include "partials/media_post.html" %}
+        {% include "partials/media_post.html" %} 
 
         <div class="url-container">
             {% if post.url %}
-            <a class="post-url" href="{{ post.url }}"><i class="fa-solid fa-link"></i>{{ post.url }}</a>
+            <a 
+                class="post-url tags-urls" 
+                href="{{ post.url }}">
+                <i class="fa-solid fa-link"></i>{{ post.url }}
+            </a>
             {% endif %}
         </div>
         {% include "partials/post_interactions2.html" %}
