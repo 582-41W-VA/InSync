@@ -1,10 +1,11 @@
 {% extends 'base.html' %} 
 {% block 'title' %} Create a post {% endblock %} 
+{{ form.media }}
 {% block 'main' %}
 <section class="create-edit-post">
     <div class="container">
         <h2 class="title">create post</h2>
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             <p>Title: {{ post_form.title }}</p>
             <p>Select Tag/Category</p>
@@ -13,12 +14,11 @@
                 <div class="tag">
                     {{ choice.tag }}
                     <label for="{{ choice.id_for_label }}"
-                        >{{ choice.choice_label }}</label
-                    >
+                        >{{ choice.choice_label }}
+                    </label>
                 </div>
                 {% endfor %}
             </div>
-            <p>Content:{{ post_form.media }}</p>
             {{ post_form.content }}
             <div class="media-input-container">
                 <div class="wrapper">

@@ -47,9 +47,25 @@ a {
     overflow-wrap: break-word;
 }
 
-ul,
-li {
-    list-style: none;
+.comment-section ul,
+.comment-section li{
+   list-style: none; 
+}
+
+.post-container .content p,
+.post-container .content li{
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.post-container .content ol,
+.post-container .content ul{
+    padding-left: 23px;
+}
+
+.post-container .content strong,
+.post-container .content ::marker {
+  color: var(--primary-color-blue);
 }
 
 h2 {
@@ -184,6 +200,14 @@ textarea::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
+
+#id_content {
+    display: block;
+    position: absolute;
+    opacity: 0;
+    height: 1px;
+    width: 1px;
+ }
 
 input::placeholder,
 textarea::placeholder {
@@ -541,13 +565,14 @@ header .search-form i {
 .errorlist.nonfield {
     color: red;
     font-size: 16px;
-    list-style-type: none;
+    list-style: none;
     padding: 0;
 }
 
 .errorlist {
     color: red;
     animation: fadeInOutAnimation 8s ease-in-out forwards;
+    list-style: none;
 }
 
 @keyframes fadeInOutAnimation {
@@ -1021,10 +1046,30 @@ details summary {
     margin-bottom: 10px;
 }
 
-.create-edit-post textarea {
-    width: 100%;
-    height: 200px;
-    margin-bottom: 8px;
+/* tinymce styles */
+.create-edit-post .tox-tinymce {
+    border: 1px solid var(--primary-color-blue);
+    border-radius: 24px;
+    background-color: var(--accent-color-light-blue);
+}
+
+.create-edit-post .tox .tox-toolbar-overlord {
+    background-color: var(--accent-color-light-blue);
+}
+
+.create-edit-post .tox .tox-edit-area__iframe {
+    background-color: var(--accent-color-light-blue);
+    padding: 20px;
+    cursor: pointer;
+}
+
+.create-edit-post .tox .tox-statusbar {
+    display: none;
+}
+
+.create-edit-post .tox .tox-tbtn:hover {
+    border: 1px solid var(--primary-color-blue);
+    cursor: pointer;
 }
 
 .create-edit-post button {
