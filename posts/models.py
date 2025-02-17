@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django_ckeditor_5.fields import CKEditor5Field
 from .helpers import sort_queries
 from django.db.models import Q
 from django.core.exceptions import ValidationError
@@ -18,7 +17,7 @@ class Tag(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
-    content = CKEditor5Field('Text', config_name='extends')
+    content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     tags = models.ManyToManyField(Tag, related_name='post_tag')
     url = models.URLField(blank=True, null=True)

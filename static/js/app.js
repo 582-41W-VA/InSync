@@ -50,7 +50,6 @@ function responsiveHeader(){
 }
 responsiveHeader();
 
-
 function main() {
     document.body.addEventListener('submit', function(event) {
         if (event.target && event.target.matches('.action-form')) {
@@ -267,6 +266,7 @@ links.forEach(link => {
         link.classList.add('active');
     }
 });
+
 
 const fileInputs = document.querySelectorAll('#id_media, #id_profile_image');
 const clearButtons = document.querySelectorAll('.clear-media-btn');

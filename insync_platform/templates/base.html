@@ -7,6 +7,7 @@
     <title>{% block 'title' %}{% endblock %}</title>
     {% load static %}
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
     <script type="module" src="{% static 'js/app.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <link 
@@ -73,6 +74,18 @@
     <footer>
         inSync 2025. All rights reserved
     </footer>
+    <script>
+        tinymce.init({
+        selector: '#id_content',
+        license_key: 'gpl',
+        plugins: 'lists',
+        toolbar: 'bold italic underline | alignleft aligncenter alignright | bullist numlist',  
+        menubar: false,
+        content_css: '{% static "css/app.css" %}',
+        drag_drop_upload: false, 
+        paste_data_images: false,
+    });
+    </script>
 </body>
 
 </html>

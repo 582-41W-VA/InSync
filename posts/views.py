@@ -235,11 +235,13 @@ def edit_comment(request, post_id):
     comment.text = new_text
     comment.save()
 
+    interaction = user_interaction_state(request.user)
     comment_html = render_to_string('partials/comment.html', 
         { 
             'comment': comment,  
             'user': request.user,
             'csrf_token': get_token(request),
+            'interaction': interaction,
         }
     )
 
@@ -291,24 +293,28 @@ def edit_post(request, post_id):
         post_form = PostForm(request.POST, instance=post)
         media_form = MediaForm(request.POST, request.FILES, instance=post.first_media())
         if post_form.is_valid() and media_form.is_valid():
+            new_media = request.FILES.get('media') 
             old_media = post.media_post.first()
-            if old_media:
+            if new_media and old_media:
                 old_media.media.delete()
-                old_media.delete()
-            post_form.save()
-            media_form.save()
+                old_media.delete()  
+            post_form.save() 
+            media_form.save()  
             messages.success(request, 'Post Edited')
             return redirect('posts:post_detail', post_id=post.id)
     else:
         post_form = PostForm(instance=post)
         media_form = MediaForm(instance=post.first_media())
+    
     context = {
         'post_form': post_form,
         'media_form': media_form,
         'action': 'Edit',
         'post': post
     }
+    
     return render(request, 'posts/edit_post.html', context)
+
 
 
 @login_required

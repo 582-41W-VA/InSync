@@ -23,8 +23,8 @@
         {% endfor %}
         </div>
 
-        <a href="{% url 'posts:post_detail' post.id %}">
-            <p class="content">{{ post.content|safe }}</p>
+        <a class="content" href="{% url 'posts:post_detail' post.id %}">
+           {{ post.content|safe }}
         </a>
 
         {% include "partials/media_post.html" %} 
@@ -32,7 +32,8 @@
         <div class="url-container">
             {% if post.url %}
             <a 
-                class="post-url tags-urls" 
+                class="post-url tags-urls"
+                target="_blank" 
                 href="{{ post.url }}">
                 <i class="fa-solid fa-link"></i>{{ post.url }}
             </a>
