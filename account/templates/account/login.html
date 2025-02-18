@@ -10,7 +10,7 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form }}  
-                <button type="submit">login</button>
+                <button class="blue-btn" type="submit">login</button>
             </form>
         </div>
         <p class="login-link">New to inSync? Sign up <a href="{% url 'account:signup' %}">here.</a></p>

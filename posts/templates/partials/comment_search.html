@@ -24,7 +24,7 @@
                     action="{% url 'posts:toggle_upvote' 'comment' comment.id %}" 
                     class="like action-form">
                     {% csrf_token %}
-                    <button type="submit">
+                    <button class="interaction-btn" type="submit">
                         {% if comment.id in interaction.comments.upvoted %}
                         <i class="fa-solid fa-heart"></i> 
                         <p class="likes-count">{{ comment.upvote_count }}</p>

@@ -4,7 +4,7 @@
         action="{% url 'posts:toggle_save' 'post' post.id %}" 
         class="action-form save">
         {% csrf_token %}
-        <button type="submit">
+        <button class="interaction-btn" type="submit">
             {% if post.id in interaction.posts.saved %}
             <i class="fa-solid fa-bookmark"></i>
             {% else %}
@@ -37,10 +37,22 @@
             <label>
                 <input type="radio" name="reason" value="other"> Other
             </label>
-            <button type="submit">Flag</button>
+            <button class="blue-btn" type="submit">Flag</button>
         </form>
     </details>
     {% if post.user == request.user %}
-    <a class="btn-yellow" href="{% url 'posts:delete_post' post.id %}">Delete</a>
+    <div 
+        id="delete-btn" 
+        class="btn-yellow"
+        data-post-id="{{ post.id }}"
+        >
+        Delete
+    </div>
+
+    <div class="popup-box" id="popup" data-post-id="{{ post.id }}">
+		<div class="popup-content">
+        {% include "posts/delete_post.html" with post_id=post.id %}
+		</div>
+	</div>
     {% endif %}
 </div>

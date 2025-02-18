@@ -15,7 +15,7 @@ const searchHeader = document.querySelector('.search-header');
 const searchbar = document.querySelector('.search-form');
 const searchIcon = document.querySelector('.search-icon');
 
-function replaceHeaders() {
+function replaceSearch() {
     if (!searchbar) return;
     if (window.innerWidth <= 600) {
     searchbar.replaceWith(searchIcon);
@@ -44,8 +44,8 @@ function responsiveHeader(){
     if (searchbar && searchIcon) {
         backButton.addEventListener('click', showMainHeader);
         searchIcon.addEventListener('click', showSearchHeader);
-        window.addEventListener('load', replaceHeaders);
-        window.addEventListener('resize', replaceHeaders);
+        window.addEventListener('load', replaceSearch);
+        window.addEventListener('resize', replaceSearch);
     }
 }
 responsiveHeader();
@@ -101,6 +101,7 @@ async function handleRequest(actionUrl, options, form){
             closeDetails();
             iconState();
             handleFlashMessage(result, button)
+            closeDetailsClickOutside();
             cancel()
         }
     } catch (error) {
@@ -246,6 +247,24 @@ function closeDetails() {
         if(el) el.removeAttribute('open');
     });
 }
+closeDetails()
+
+function closeDetailsClickOutside() {
+    const details = document.querySelectorAll('details');
+    document.addEventListener('click', function(event) {
+        let clickedInsideDetails = false;
+        details.forEach(function(detail) {
+            if (detail.contains(event.target)) clickedInsideDetails = true;
+        });
+
+        if (!clickedInsideDetails) {
+            details.forEach(function(detail) {
+                detail.removeAttribute('open');
+            });
+        }
+    });
+}
+closeDetailsClickOutside();
 
 function cancel(){
     const cancelBtn = document.querySelectorAll('.cancel-btn')
@@ -266,7 +285,6 @@ links.forEach(link => {
         link.classList.add('active');
     }
 });
-
 
 const fileInputs = document.querySelectorAll('#id_media, #id_profile_image');
 const clearButtons = document.querySelectorAll('.clear-media-btn');
@@ -379,3 +397,38 @@ function handleClear(event, fileInput, mediaPreview, fileNamePreview, clearButto
     if (profileCheckbox) profileCheckbox.checked = true;
     if (mediaCheckbox) mediaCheckbox.checked = true;
 }
+
+function handlePopup(){
+    const popups = document.querySelectorAll('#popup');
+    const deleteBtns = document.querySelectorAll('#delete-btn')
+    const closeBtns = document.querySelectorAll('#close-btn');
+
+    deleteBtns.forEach(function (btn) {
+        btn.addEventListener('click', function (event) {
+            const postId = event.target.getAttribute('data-post-id'); 
+            const closestPopup = document.querySelector(`#popup[data-post-id="${postId}"]`);
+            if (closestPopup) {
+                document.body.classList.add('popup-is-active');
+                closestPopup.classList.add('active-popup');
+            }
+        });
+    });
+
+    popups.forEach(function(popup){
+        popup.addEventListener('click', function(event){
+            if(event.target === popup){
+                document.body.classList.remove('popup-is-active');
+                popup.classList.remove('active-popup');
+            }
+        });
+    })
+
+    closeBtns.forEach(function(closebtn){
+        closebtn.addEventListener('click', function(event){
+            document.body.classList.remove('popup-is-active');
+            const closestPopup = event.target.closest('#popup')
+            closestPopup.classList.remove('active-popup');
+        });
+    })
+}
+handlePopup()

@@ -4,7 +4,7 @@
         action="{% url 'posts:toggle_save' 'comment' comment.id %}" 
         class="action-form">
         {% csrf_token %}
-        <button type="submit">
+        <button class="interaction-btn" type="submit">
             {% if comment.id in interaction.comments.saved %}
             <i class="fa-solid fa-bookmark"></i>
             {% else %}
@@ -35,7 +35,7 @@
             <label>
                 <input type="radio" name="reason" value="other"> Other
             </label>
-            <button type="submit">Flag</button>
+            <button class="blue-btn" type="submit">Flag</button>
         </form>
     </details>
 
@@ -46,7 +46,7 @@
         class="action-form">
         {% csrf_token %}
         <input type="hidden" name="comment_id" value="{{ comment.id }}">
-        <button type="submit" name="delete_comment"> <i class="fa-solid fa-delete-left"></i></button>
+        <button class="interaction-btn" type="submit" name="delete_comment"> <i class="fa-solid fa-delete-left"></i></button>
     </form>
     {% endif %}
 </div>
