@@ -1,23 +1,32 @@
 {% extends 'base.html' %}
 {% block 'title' %}Search Results{% endblock %}
 {% block 'main' %}
+
 {% if posts %}
 <section class="post-results">
-    <div class="container">  
-    {% include "partials/post_search.html" %}
+    <div class="container">
+        {% include "partials/post_search.html" %}
     </div>
 </section>
-{% elif comments %}
+{% endif %}
+
+{% if comments %}
 <section class="comment-results">
     <div class="container">
-    {% include "partials/comment_search.html" with header="Comments"  %}
+        {% include "partials/comment_search.html" with header="Comments" %}
     </div>
 </section>
-{% else %}
+{% endif %}
+
+{% if not posts and not comments %}
 <div class="container">
-    <h3>
-        No result for search: {{ query }}
-    </h3>
+    <h3>No result for: "{{ query }}"</h3>
 </div>
 {% endif %}
 {% endblock %}
+
+   
+
+    
+
+
