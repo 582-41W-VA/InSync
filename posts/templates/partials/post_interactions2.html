@@ -4,7 +4,7 @@
         action="{% url 'posts:toggle_upvote' 'post' post.id %}" 
         class="action-form like">
         {% csrf_token %}
-        <button type="submit">
+        <button class="interaction-btn" type="submit">
             {% if post.id in interaction.posts.upvoted %}
             <i class="fa-solid fa-heart"></i> 
             <p class="likes-count">{{ post.upvote_count }}</p>

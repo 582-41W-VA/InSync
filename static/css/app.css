@@ -19,6 +19,10 @@ body {
     font-family: 'Kantumruy Pro', serif;
 }
 
+body.popup-is-active{
+	overflow-y: hidden;
+}
+
 .post-title,
 p {
     line-height: 1.5;
@@ -106,25 +110,60 @@ hr {
     transform: translate(-50%, -50%);
 }
 
-button {
+button{
+    cursor: pointer;
+}
+
+.cancel-btn{
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+    color: var(--white);
+    padding: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.4s;
+    border: none;
+}
+
+.cancel-btn:hover{
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.blue-btn {
     width: fit-content;
-    padding: 10px 24px;
+    padding: 7px 20px;
     border-radius: 24px;
     font-size: 14px;
-    border: none;
+    border: 1px solid transparent;
     cursor: pointer;
     text-transform: capitalize;
     background-color: var(--primary-color-blue);
     color: var(--white);
-    border: transparent 1px solid;
-    margin: 0 auto;
     transition: 0.4s;
 }
 
-button:hover {
+.interaction-btn{
+    background-color: transparent;
+    color: var(--primary-color-blue);
+    width: 30px;
+    height: 30px;
+    padding: 20px;
+    border-radius: 50%;
+    font-weight: 500;
+    transition: 0.4s;
+    border: 1px solid transparent;
+}
+
+.blue-btn:hover,
+.interaction-btn:hover {
     background-color: var(--accent-color-light-blue);
-    color: var(--black);
-    border: var(--black) 1px solid;
+    color: var(--primary-color-blue);
+    border: 1px solid var(--black);
+   
+}
+
+.interaction-btn:hover{
+    color: red;
 }
 
 .btn-yellow {
@@ -135,6 +174,7 @@ button:hover {
     display: inline-block;
     transition: 0.4s;
     white-space: nowrap;
+    cursor: pointer;
 }
 
 .btn-yellow:hover {
@@ -170,6 +210,7 @@ button:hover {
     gap: 8px;
     align-items: center;
     width: fit-content;
+    margin-top: 20px;
 }
 
 input,
@@ -423,6 +464,14 @@ header .holder {
     display: flex;
     gap: 8px;
     align-items: center;
+}
+
+header .profile-acc div{
+    transition: 0.4s;
+}
+
+header .profile-acc div:hover{
+    scale: 1.1;
 }
 
 header nav ul {
@@ -742,25 +791,6 @@ header .search-form i {
     position: relative;
 }
 
-.interaction button,
-.comment-interaction button {
-    background-color: transparent;
-    color: var(--primary-color-blue);
-    width: 30px;
-    height: 30px;
-    padding: 20px;
-    border-radius: 50%;
-    font-weight: 500;
-    transition: 0.4s;
-}
-
-.interaction button:hover,
-.comment-interaction button:hover {
-    background-color: var(--accent-color-light-blue);
-    font-weight: 600;
-    color: red;
-}
-
 .interaction i,
 .comment-interaction i {
     color: var(--primary-color-blue);
@@ -836,6 +866,13 @@ details summary {
     border-radius: 24px;
 }
 
+.interaction .flag form button,
+.comment-interaction .flag form button {
+    margin: 0 auto;
+    margin-top: 8px;
+    padding: 6px 16px;
+}
+
 .comment-interaction .reply,
 .comment-interaction .edit {
     gap: 0;
@@ -873,44 +910,6 @@ details summary {
     justify-content: flex-end;
     padding: 4px 16px;
     padding-bottom: 10px;
-}
-
-.comment-interaction details .reply button,
-.comment-interaction details .edit button {
-    margin: 0;
-    background-color: var(--primary-color-blue);
-    border-radius: 24px;
-    color: var(--white);
-    padding: 8px;
-    font-size: 14px;
-}
-
-.comment-interaction details .reply .cancel-btn,
-.comment-interaction details .edit .cancel-btn {
-    margin: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 24px;
-    color: var(--white);
-    padding: 8px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.comment-interaction details .reply button:nth-of-type(2),
-.comment-interaction details .edit button:nth-of-type(2) {
-    background-color: var(--primary-color-blue);
-    color: var(--white);
-    padding: 8px 16px;
-    border-radius: 8px;
-}
-
-.interaction details form button,
-.comment-interaction details form button {
-    text-align: center;
-    width: fit-content;
-    align-items: center;
-    border: none;
-    padding: 0;
 }
 
 .interaction .comments-link {
@@ -1039,6 +1038,10 @@ details summary {
     user-select: none;
 }
 
+.create-edit-post .btn-container{
+    margin: 0 auto;
+}
+
 .tag {
     display: flex;
     align-items: center;
@@ -1070,11 +1073,6 @@ details summary {
 .create-edit-post .tox .tox-tbtn:hover {
     border: 1px solid var(--primary-color-blue);
     cursor: pointer;
-}
-
-.create-edit-post button {
-    display: block;
-    margin-top: 20px;
 }
 
 /* edit profile and post media inputs */
@@ -1145,16 +1143,14 @@ details summary {
     font-size: 20px;
     color: red;
     border: none;
-    cursor: pointer;
-    padding: 0;
     position: absolute;
     top: 5px;
     right: 25px;
+    transition: 0.4s;
 }
 
 .clear-media-btn:hover {
-    background-color: transparent;
-    border: none;
+    color: var(--black);
 }
 
 .wrapper {
@@ -1166,6 +1162,7 @@ details summary {
     display: none;
 }
 
+/* update profile */
 .update-profile .profile-img {
     width: 150px;
     height: 150px;
@@ -1289,6 +1286,41 @@ details summary {
     width: 100%;
     gap: 10px;
     margin: 40px 0;
+}
+
+/* delete popupbox */
+.popup-box{
+	background: rgba(0, 0, 0, 0.5);
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+.popup-box.active-popup{
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+}
+
+.popup-content{
+	background: var(--secondary-color-yellow);
+	padding: 50px 30px;
+	max-width: 500px;
+	max-height: 400px;
+    min-width: 300px;
+    position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+    border-radius: 24px;
 }
 
 /* footer */

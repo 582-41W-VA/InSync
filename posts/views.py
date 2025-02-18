@@ -169,7 +169,7 @@ def post_detail(request, post_id):
     context = {
         "post": post,
         "comments": sorted_comments,
-        'sort_by': sort_by
+        'sort_by': sort_by,
     }
 
     return render(request, "posts/post_detail.html", context)
