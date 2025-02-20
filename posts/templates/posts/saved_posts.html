@@ -8,11 +8,9 @@
         <form method="GET" action="{% url 'posts:saved_posts' %}">
             {% csrf_token %} {% include "partials/sort.html" %}
         </form>
-        {% for post in posts %}
-        {% include "partials/post_search.html" %}
-        {% empty %}
-        <p>You have not saved any posts yet.</p>
-        {% endfor %}
     </div>
 </section>
+{% if posts %}
+{% include "partials/post_search.html" %}
+{% endif %}
 {% endblock %}
