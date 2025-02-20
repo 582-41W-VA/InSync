@@ -38,11 +38,7 @@
 </section>
 
 {% if posts %}
-<section class="post-results">
-    <div class="container">
-        {% include "partials/post_search.html" %}
-    </div>
-</section>
+{% include "partials/post_search.html" %}
 {% endif %}
 
 {% endblock %}
