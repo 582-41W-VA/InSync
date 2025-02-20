@@ -1,11 +1,15 @@
 <div class="post-container flex">
     <div class="left">
-        {% include "partials/profile_img.html" %}
+        <a href="{% url 'account:user_profile' post.user.username %}">
+            {% include "partials/profile_img.html" %}
+        </a>
     </div>
     <div class="right">
         <div class="post-head flex">
             <div class="flex">
-                <strong>{{ post.user.username }}</strong>
+                <a class="user_profile" href="{% url 'account:user_profile' post.user.username %}">
+                    <strong>{{ post.user.username }}</strong>
+                </a>
                 {% load custom_filters %}
                 <p>{{ post.created_at|shortened_timesince }} ago</p>
             </div>

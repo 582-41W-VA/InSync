@@ -6,12 +6,16 @@
     </label> 
     <div class="comment-container flex"> 
         <div class="left">
-            {% include "partials/profile_img.html" with post=comment %}           
+            <a href="{% url 'account:user_profile' comment.user.username %}">
+                {% include "partials/profile_img.html" with post=comment %}
+            </a>            
         </div>
         <div class="right">
             <div class="comment-head flex">
                 <div class="flex">
-                    <strong>{{ comment.user.username }}</strong>
+                    <a class="user_profile" href="{% url 'account:user_profile' comment.user.username %}">
+                       <strong>{{ comment.user.username }}</strong>
+                    </a> 
                     {% load custom_filters %}
                     <small>{{ comment.created_at|shortened_timesince }} ago</small>
                 </div>

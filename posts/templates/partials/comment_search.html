@@ -1,42 +1,53 @@
-<h2 class="result-header">{{ header }}</h2>
-{% for comment in comments %}
-<div class="top-flex flex">
-    <div class="left">{% include "partials/profile_img.html" with post=comment %}</div>
-    <div class="right">
-        <div class="content-wrapper">
-            <div class="comment-head flex">
-                <div class="flex">
-                    <strong>{{ comment.user.username }}</strong>
-                    {% load custom_filters %}
-                    <small>{{ comment.created_at|shortened_timesince }} ago</small>
-                </div>
-                {% include "partials/comment_interaction.html" %}
+<section class="comment-results">
+    <div class="container">
+        <h2 class="result-header">{{ header }}</h2>
+        {% for comment in comments %}
+        <div class="top-flex flex">
+            <div class="left">
+                <a href="{% url 'account:user_profile' comment.user.username %}">
+                    {% include "partials/profile_img.html" with post=comment %}
+                </a> 
             </div>
-            {% if comment.text %}
-            <h3 class="post-title">
-                <a href="{% url 'posts:post_detail' comment.post.id %}">{{ comment.post.title }}</a>
-            </h3>
-            <p>{{ comment.text }}</p>
-            {% endif %}
-            <div class="comment-interaction">
-                <form 
-                    method="POST" 
-                    action="{% url 'posts:toggle_upvote' 'comment' comment.id %}" 
-                    class="like action-form">
-                    {% csrf_token %}
-                    <button class="interaction-btn" type="submit">
-                        {% if comment.id in interaction.comments.upvoted %}
-                        <i class="fa-solid fa-heart"></i> 
-                        <p class="likes-count">{{ comment.upvote_count }}</p>
-                        {% else %}
-                        <i class="fa-regular fa-heart"></i> 
-                        <p class="likes-count">{{ comment.upvote_count }}</p>
-                        {% endif %}
-                    </button>
-                </form>
+            <div class="right">
+                <div class="content-wrapper">
+                    <div class="comment-head flex">
+                        <div class="flex">
+                            <a class="user_profile" href="{% url 'account:user_profile' comment.user.username %}">
+                            <strong>{{ comment.user.username }}</strong> 
+                            </a> 
+                            {% load custom_filters %}
+                            <small>{{ comment.created_at|shortened_timesince }} ago</small>
+                        </div>
+                        {% include "partials/comment_interaction.html" %}
+                    </div>
+                    {% if comment.text %}
+                    <h3 class="post-title">
+                        <a href="{% url 'posts:post_detail' comment.post.id %}">{{ comment.post.title }}</a>
+                    </h3>
+                    <p>{{ comment.text }}</p>
+                    {% endif %}
+                    <div class="comment-interaction">
+                        <form 
+                            method="POST" 
+                            action="{% url 'posts:toggle_upvote' 'comment' comment.id %}" 
+                            class="like action-form">
+                            {% csrf_token %}
+                            <button class="interaction-btn" type="submit">
+                                {% if comment.id in interaction.comments.upvoted %}
+                                <i class="fa-solid fa-heart"></i> 
+                                <p class="likes-count">{{ comment.upvote_count }}</p>
+                                {% else %}
+                                <i class="fa-regular fa-heart"></i> 
+                                <p class="likes-count">{{ comment.upvote_count }}</p>
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
+        <hr>
+        {% endfor %}
     </div>
-</div>
-<hr>
-{% endfor %}
+</section>
+

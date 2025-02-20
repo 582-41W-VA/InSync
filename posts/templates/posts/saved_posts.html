@@ -9,10 +9,7 @@
             {% csrf_token %} {% include "partials/sort.html" %}
         </form>
         {% for post in posts %}
-        <div class="posts">
-            {% include "partials/post.html" %}
-            <hr />
-        </div>
+        {% include "partials/post_search.html" %}
         {% empty %}
         <p>You have not saved any posts yet.</p>
         {% endfor %}
