@@ -1,10 +1,10 @@
 from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from .forms import ProfileUpdateForm, ProfileImage
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
-from posts.models import Post 
+from posts.models import Post, Comment
 from .models import Profile
 import os
 from django.contrib.auth.forms import (
@@ -77,6 +77,24 @@ def update_profile(request):
     context = {'form': form, 'profile_img': profile_img, 'profile': profile}
     return render(request, 'account/update_profile.html', context)
 
+
+def user_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    posts = Post.objects.filter(user=user).order_by('-created_at')
+    context = {
+        'profile_user': user,
+        'posts': posts,
+    }
+    return render(request, 'account/user_profile.html', context)
+
+def user_profile_comments(request, username):
+    user = get_object_or_404(User, username=username)
+    comments = Comment.objects.filter(user=user).order_by('-created_at')
+    context = {
+        'profile_user': user,
+        'comments': comments,
+    }
+    return render(request, 'account/user_profile_comments.html', context)
 
 def logout(request):
     django_logout(request)

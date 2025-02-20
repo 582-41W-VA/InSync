@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block 'title' %} {{request.user.username }} {% endblock %} 
+{% block 'main' %} 
+{% include "partials/flash_message.html" %} 
+
+<section class="profile-overview">
+    <div class="container">
+        <div class="profile-container">
+            {% if profile_user.profile.profile_image %}
+            <div
+                class="profile-img"
+                style="background-image: url('{{ profile_user.profile.profile_image.url }}');">
+            </div>
+            {% else %}
+            <div class="no-img">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            {% endif %}
+            <div>
+                <p>{{ profile_user.username }}</p>
+                <p>{{ profile_user.profile.email }}</p>
+                <p>{{ profile_user.profile.job_title }}</p>
+            </div>
+        </div>
+        <div class="profile-links">
+            <a 
+				class="btn-transparent" 
+				href="{% url 'account:user_profile' profile_user.username %}">
+				Posts
+			</a>
+            <a
+                class="btn-transparent"
+                href="{% url 'account:user_profile_comments' profile_user.username %}">
+				Comments
+			</a>
+        </div>
+    </div>
+</section>
+
+{% if posts %}
+{% include "partials/post_search.html" %}
+{% endif %}
+
+{% endblock %}

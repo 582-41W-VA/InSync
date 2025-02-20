@@ -159,7 +159,6 @@ button{
     background-color: var(--accent-color-light-blue);
     color: var(--primary-color-blue);
     border: 1px solid var(--black);
-   
 }
 
 .interaction-btn:hover{
@@ -1321,6 +1320,15 @@ details summary {
 	left: 50%;
 	transform: translate(-50%, -50%);
     border-radius: 24px;
+}
+
+/* username hover */
+.user_profile{
+    transition: 0.4s;
+}
+
+.user_profile:hover{
+    color: var(--primary-color-blue);
 }
 
 /* footer */
